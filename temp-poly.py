@@ -2,13 +2,9 @@
 
 import polyinterface
 import sys
-import json
-import RPi.GPIO as GPIO
 import os
-import glob
 import time
 import datetime
-import queue
 import os,subprocess
 from subprocess import call
 from w1thermsensor import W1ThermSensor
