@@ -10,7 +10,7 @@
     "longPoll": "60",
     "credits": [
         {
-            "title": "TRPI temp SensorsGPIO: a NodeServer to read Temp Sensors om RPI 2wire bus",
+            "title": "RPI temp SensorsGPIO: a NodeServer to read Temp Sensors om RPI 1wire bus",
             "author": "Panda88CO",
             "version": "0.0.1",
             "date": "June 5, 2020",
