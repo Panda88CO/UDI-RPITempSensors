@@ -2,6 +2,7 @@
 
  >Multiple Temperature Sensors DS18B20 can be placed placed on the same 2 wire bus on RPi - Vcc Pin1, GND Pin6, Data Pin7 - 4.7K Ohm resistor from pin7 to pin 1 - only one resistor is needed if multiple sensors are used 
 (Only tested with 2 sensors this far)
+> Sensors can be bought on Amazon or similar - search for DS18B20 - remember 4.7K resistor is usually not included, but some kit do - also one need to connect to the RPI header 
 
 > shortPoll updates temperature
 > longPoll logs values for 24Hour Min/Max
