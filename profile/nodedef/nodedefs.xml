@@ -27,7 +27,9 @@
             <sends>
                 <cmd id="UPDATE" />
             </sends>
-            <accepts />
+            <accepts>
+                <cmd id="UPDATE" />
+            </accepts >
         </cmds>
     </nodeDef>
 </nodeDefs>
