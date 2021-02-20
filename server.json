@@ -2,18 +2,18 @@
     "name": "TempSensors",
     "docs": "https://github.com/Panda88CO/UDI-RPITempSensors",
     "type": "python3",
-    "executable": "temp-poly.py",
+    "executable": "tempIO-poly.py",
     "install": "install.sh",
     "description": "Raspberry Pi with multiple DS18B20 Temperature Sensors ",
     "notice": "Only 1 4.7K Ohm pull up resistor needed for multiple sensors",
-    "shortPoll": "15",
-    "longPoll": "60",
+    "shortPoll": "30",
+    "longPoll": "180",
     "credits": [
         {
-            "title": "RPI temp SensorsGPIO: a NodeServer to read Temp Sensors om RPI 1wire bus",
+            "title": "RPI temp SensorsGPIO: a NodeServer to read Temp Sensors om RPI 1wire bus and simple IO control",
             "author": "Panda88CO",
-            "version": "0.0.1",
-            "date": "June 5, 2020",
+            "version": "0.1.0",
+            "date": "August 4, 2020",
             "source": "https://https://github.com/Panda88CO/UDI-RPITempSensors",
             "license": "https://raw.githubusercontent.com/Panda88CO/UDI-RPITempSensors/master/LICENSE"
         }
