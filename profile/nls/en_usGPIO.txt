@@ -6,6 +6,13 @@ ST-TEMP-ST-NAME = NodeServer Online
 STATUS-0 = Off-line
 STATUS-1 = On-lIne
 
+# Relay
+ND-RELAY-NAME = Relay
+ND-RELAY-ICON = Output
+ST-RELAY-ST-NAME = Offset Res Enable 
+STATUS-0 = Normal
+STATUS-1 = Resistor EN
+
 # Temp Sensor
 ND-TEMPSENSOR-NAME = Temp Sensor
 ND-TEMPSENSOR-ICON = Input

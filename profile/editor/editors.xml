@@ -1,10 +1,4 @@
 <editors>
-    <editor id="OUTPUT">
-        <range uom="25" subset="0-2" nls="HEAT_STATE" />
-    </editor>
-    <editor id="INPUTPIN">
-         <range uom="25" subset="0-2" nls="WATER_LEVEL" />
-    </editor> 
     <editor id="BOOL">
         <range uom="2" subset="0,1" />
     </editor>
@@ -17,7 +11,7 @@
     <editor id="TEMPC24H_MAX">
         <range uom="4" min="-40" max="100" step="1" prec="1"/>
     </editor>
-    <editor id="LAST_UPDATE_MO">
+        <editor id="LAST_UPDATE_MO">
         <range uom="47" subset="1-12" />
     </editor>  
     <editor id="LAST_UPDATE_D">
