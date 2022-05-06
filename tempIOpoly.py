@@ -106,7 +106,7 @@ class Controller(polyinterface.Controller):
         LOGGER.debug('discover')
  
         count = 0
-        for mySensor in self.mySensors.get_available_sensors(Sensor.DS18B20)):
+        for mySensor in self.mySensors.get_available_sensors(Sensor.DS18B20):
             count = count+1
             currentSensor = mySensor.id.lower() 
             LOGGER.info(currentSensor+ 'Sensor Serial Number Detected - use Custom Params to rename')
