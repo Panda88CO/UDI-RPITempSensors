@@ -7,7 +7,7 @@ import time
 import datetime
 import os,subprocess
 from subprocess import call
-from w1thermsensor import W1ThermSensor
+from w1thermsensor import W1ThermSensor, Sensor, Unit
 
 
 LOGGER = polyinterface.LOGGER
@@ -33,7 +33,7 @@ class Controller(polyinterface.Controller):
         LOGGER.debug('start - Temp Sensor controller')
         try:
             self.mySensors = W1ThermSensor()
-            self.nbrSensors = len(self.mySensors.get_available_sensors())
+            self.nbrSensors = len(self.mySensors.get_available_sensors(Sensor.DS18B20))
             LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
             self.discover()
             self.setDriver('ST', 1)
@@ -77,7 +77,7 @@ class Controller(polyinterface.Controller):
     def discover(self, command=None):
         LOGGER.debug('discover')
         count = 0
-        for mySensor in self.mySensors.get_available_sensors():
+        for mySensor in self.mySensors.get_available_sensors(Sensor.DS18B20):
             count = count+1
             currentSensor = mySensor.id.lower() 
             LOGGER.info(currentSensor+ 'Sensor Serial Number Detected - use Custom Params to rename')
@@ -112,8 +112,8 @@ class TEMPsensor(polyinterface.Node):
 
     def start(self):
         LOGGER.debug('TempSensor start')
-        self.sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, self.sensorID )
-        self.tempC = self.sensor.get_temperature(W1ThermSensor.DEGREES_C)
+        self.sensor = W1ThermSensor(Sensor.DS18B20, self.sensorID )
+        self.tempC = self.sensor.get_temperature(Unit.DEGREES_C)
         self.tempMinC24H = self.tempC
         self.tempMaxC24H = self.tempC
         self.tempMinC24HUpdated = False

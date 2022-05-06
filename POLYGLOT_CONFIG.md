@@ -13,7 +13,7 @@ Sensors shows up with NoName when found - Name them to desired disply in ISY
 Input Ports can be defined by specifying portN (Brcm numbering) as KEY and VALUE as IN:name (name is shown in ISY)
 Output Ports can be defined by specifying portN (Brcm numbering) as KEY and VALUE as OUT:name (name shown in ISY)
 
-> Uses W1ThemSensor library - more info can be found there 
+> Uses W1ThemSensor library - more info can be found there <https://github.com/timofurrer/w1thermsensor>
 
 Added a heat beat function toggling with SHORT POll - ISY can be used to detect this and know if connection is lost 
 
