@@ -32,10 +32,10 @@ class Controller(polyinterface.Controller):
     def start(self):
         LOGGER.debug('start - Temp Sensor controller')
         try:
-            self.mySensors = W1ThermSensor.get_available_sensors()
-            LOGGER.debug(self.mySensors)
-            self.nbrSensors = len(self.mySensors)
-            LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
+            #self.mySensors = W1ThermSensor.get_available_sensors()
+            #LOGGER.debug(self.mySensors)
+            #self.nbrSensors = len(self.mySensors)
+            #LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
             self.discover()
             self.setDriver('ST', 1)
         except Exception as e:
@@ -68,16 +68,14 @@ class Controller(polyinterface.Controller):
         LOGGER.debug('Update Info')
         pass
 
-    def query(self, command=None):
-        LOGGER.debug('querry')
-        for node in self.nodes:
-            self.nodes[node].updateInfo()
-            self.nodes[node].update24Hqueue()
 
-
-    def discover(self, command=None):
+    def discover(self):
         LOGGER.debug('discover')
         count = 0
+        self.mySensors = W1ThermSensor.get_available_sensors()
+        LOGGER.debug(self.mySensors)
+        self.nbrSensors = len(self.mySensors)
+        LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
         for mySensor in self.mySensors:
             count = count+1
             currentSensor = mySensor.id.lower() 
@@ -172,9 +170,6 @@ class TEMPsensor(polyinterface.Node):
         #return True                                                    
         
     
-    def query(self, command=None):
-        LOGGER.debug('TempSensor querry')
-        self.updateInfo()
 
 
     drivers = [{'driver': 'GV0', 'value': 0, 'uom': 4},
