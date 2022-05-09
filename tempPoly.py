@@ -32,13 +32,14 @@ class Controller(polyinterface.Controller):
     def start(self):
         LOGGER.debug('start - Temp Sensor controller')
         try:
-            self.mySensors = W1ThermSensor()
-            self.nbrSensors = len(self.mySensors.get_available_sensors(Sensor.DS18B20))
+            self.mySensors = W1ThermSensor.get_available_sensors()
+            LOGGER.debug(self.mySensors)
+            self.nbrSensors = len(self.mySensors)
             LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
             self.discover()
             self.setDriver('ST', 1)
-        except:
-            LOGGER.info('ERROR initializing w1thermSensors ')
+        except Exception as e:
+            LOGGER.info('ERROR initializing w1thermSensors: {}'.format(e))
             self.setDriver('ST', 0)
             self.stop()
         self.updateInfo()
@@ -77,7 +78,7 @@ class Controller(polyinterface.Controller):
     def discover(self, command=None):
         LOGGER.debug('discover')
         count = 0
-        for mySensor in self.mySensors.get_available_sensors(Sensor.DS18B20):
+        for mySensor in self.mySensors:
             count = count+1
             currentSensor = mySensor.id.lower() 
             LOGGER.info(currentSensor+ 'Sensor Serial Number Detected - use Custom Params to rename')
@@ -112,7 +113,7 @@ class TEMPsensor(polyinterface.Node):
 
     def start(self):
         LOGGER.debug('TempSensor start')
-        self.sensor = W1ThermSensor(Sensor.DS18B20, self.sensorID )
+        self.sensor = W1ThermSensor(sensor_id=self.sensorID )
         self.tempC = self.sensor.get_temperature(Unit.DEGREES_C)
         self.tempMinC24H = self.tempC
         self.tempMaxC24H = self.tempC
@@ -150,8 +151,7 @@ class TEMPsensor(polyinterface.Node):
 
     def updateInfo(self):
         LOGGER.debug('TempSensor updateInfo')
-        self.sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, self.sensorID )
-        self.tempC = self.sensor.get_temperature(W1ThermSensor.DEGREES_C)
+        self.tempC = self.sensor.get_temperature(Unit.DEGREES_C)
         if self.tempC < self.tempMinC24H:
             self.tempMinC24H = self.tempC
             self.tempMin24HUpdated = True
