@@ -1,3 +1,3 @@
-polyinterface>=2.0.29
-w1thermsensor
+polyinterface>= 2.1.0
+w1thermsensor>= 2.0.0
 #RPi.GPIO>=0.6.3
