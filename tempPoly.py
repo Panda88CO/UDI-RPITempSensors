@@ -76,7 +76,7 @@ class Controller(polyinterface.Controller):
             self.reportCmd('DOF',2)
             self.hb = 0
 
-    def discover(self):
+    def discover(self, command = None):
         LOGGER.info('discover')
         count = 0
         self.mySensors = W1ThermSensor.get_available_sensors()
@@ -114,7 +114,7 @@ class Controller(polyinterface.Controller):
             if not address in self.nodes :
                self.addNode(TEMPsensor(self, self.address, address, name, currentSensor))
             else:
-                tmpNode = self.node[address]
+                tmpNode = self.nodes[address]
                 if tmpNode.name != name: # name has been changed 
                     self.delNode(tmpNode)
                     self.addNode(TEMPsensor(self, self.address, address, name, currentSensor))
@@ -122,7 +122,7 @@ class Controller(polyinterface.Controller):
         LOGGER.info('discover found {} sensors: {}'.format(count, self.mySensors ))
 
     def setTempUnit(self, command ):
-        LOGGER.info('setTempUnit {}'.format(self.sensorID))
+        LOGGER.info('setTempUnit')
         self.tempUnit  = int(command.get('value'))
         
         if 'tempUnit' in self.polyConfig['customParams']:
@@ -137,7 +137,7 @@ class Controller(polyinterface.Controller):
             self.addCustomParam({'tempUnit': 'Celcius'})
         #self.polyConfig['customParams'][self.unitIndex] = self.tempUnit 
         self.setDriver('GV3', self.tempUnit, True, True)  
-
+        self.longPoll()
 
 
     id = 'RPITEMP'
@@ -227,7 +227,7 @@ class TEMPsensor(polyinterface.Node):
                                              
 
 
-    def updateTemp(self):
+    def updateTemp(self, command = None):
         LOGGER.info('updateTemp {}'.format(self.sensorID))
         self.updateInfo()
 
