@@ -10,17 +10,17 @@
     <editor id="TEMPC">
         <range uom="4" min="-40" max="100"  prec="1"/>
         <range uom="17" min="-40" max="212"  prec="1"/>
-        <range uom="27" min="233" max="373"  prec="1"/>
+        <range uom="26" min="233" max="373"  prec="1"/>
     </editor>
     <editor id="TEMPC24H_MIN">
         <range uom="4" min="-40" max="100"  prec="1"/>
         <range uom="17" min="-40" max="212"  prec="1"/>
-        <range uom="27" min="233" max="373"  prec="1"/>
+        <range uom="26" min="233" max="373"  prec="1"/>
     </editor> 
     <editor id="TEMPC24H_MAX">
         <range uom="4" min="-40" max="100"  prec="1"/>
         <range uom="17" min="-40" max="212"  prec="1"/>
-        <range uom="27" min="233" max="373"  prec="1"/>
+        <range uom="26" min="233" max="373"  prec="1"/>
     </editor>
         <editor id="LAST_UPDATE_MO">
         <range uom="47" subset="1-12" />

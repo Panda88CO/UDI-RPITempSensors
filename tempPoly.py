@@ -163,9 +163,9 @@ class TEMPsensor(polyinterface.Node):
         self.currentTime = datetime.datetime.now()
         
         if self.tempUnit == 2:
-            self.setDriver('GV0', round(float(self.tempC+373.15),1), True, True, 27)
-            self.setDriver('GV1', round(float(self.tempMinC24H+373.15),1), True, True, 27)
-            self.setDriver('GV2', round(float(self.tempMaxC24H+373.15),1), True, True, 27)
+            self.setDriver('GV0', round(float(self.tempC+273.15),1), True, True, 26)
+            self.setDriver('GV1', round(float(self.tempMinC24H+273.15),1), True, True, 26)
+            self.setDriver('GV2', round(float(self.tempMaxC24H+273.15),1), True, True, 26)
         elif self.tempUnit == 1:
             self.setDriver('GV0', round(float(self.tempC*9/5+32),1), True, True, 17)
             self.setDriver('GV1', round(float(self.tempMinC24H*9/5+32),1), True, True, 17)
