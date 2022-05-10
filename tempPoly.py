@@ -101,8 +101,8 @@ class Controller(polyinterface.Controller):
     commands =  {'DISCOVER' : discover} 
 
 
-    drivers = [ {'driver': 'ST', 'value': 1, 'uom' : 2},
-                {'driver': 'GV0','value': 0, 'uom' : 25}]  # select between C and F
+    drivers = [ {'driver': 'ST', 'value': 1, 'uom' : 25},
+                ] 
 
 
 class TEMPsensor(polyinterface.Node):

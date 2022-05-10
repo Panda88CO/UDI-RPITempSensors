@@ -2,7 +2,7 @@
 ND-RPITEMP-NAME = RPi Temp Controller
 ND-RPITEMP-ICON = GenericCtl
 CMD-TEMP-DISCOVER-NAME = Update
-ST-TEMP-ST-NAME = NodeServer Online
+ST-TEMP-ST-NAME = NodeServer Status
 STATUS-0 = Offline
 STATUS-1 = OnlIne
 
