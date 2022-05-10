@@ -15,6 +15,7 @@ LOGGER = polyinterface.LOGGER
 class Controller(polyinterface.Controller):
     def __init__(self, polyglot):
         super().__init__(polyglot)
+        LOGGER.setLevel(logging.INFO)
         LOGGER.info('_init_')
         self.name = 'Rpi Temp Sensors'
         self.address = 'rpitemp'
@@ -72,7 +73,7 @@ class Controller(polyinterface.Controller):
 
 
     def discover(self):
-        LOGGER.debug('discover')
+        LOGGER.info('discover')
         count = 0
         self.mySensors = W1ThermSensor.get_available_sensors()
         LOGGER.debug(self.mySensors)
@@ -93,7 +94,7 @@ class Controller(polyinterface.Controller):
             #LOGGER.debug( address + ' '+ name + ' ' + currentSensor)
             if not address in self.nodes:
                self.addNode(TEMPsensor(self, self.address, address, name, currentSensor))
-
+        LOGGER.info('discover found {} sensors: {}'.format(count, self.mySensors ))
 
 
     id = 'RPITEMP'
@@ -154,6 +155,7 @@ class TEMPsensor(polyinterface.Node):
     def updateInfo(self):
         LOGGER.debug('TempSensor updateInfo')
         self.tempC = self.sensor.get_temperature(Unit.DEGREES_C)
+        LOGGER.info('TempSensor: {} updateInfo: temp(C): {}'.format(self.sensorID, self.tempC))
         if self.tempC < self.tempMinC24H:
             self.tempMinC24H = self.tempC
             self.tempMin24HUpdated = True
@@ -185,13 +187,13 @@ class TEMPsensor(polyinterface.Node):
         #return True                                                    
         
     def setTempUnit(self, command ):
-        LOGGER.debug('setTempUnit {}'.format(self.sensorID))
+        LOGGER.info('setTempUnit {}'.format(self.sensorID))
         self.tempUnit  = int(command.get('value'))
         self.setDriver('GV3', self.tempUnit, True, True)  
         self.updateInfo()        
 
     def updateTemp(self):
-        LOGGER.debug('updateTemp {}'.format(self.sensorID))
+        LOGGER.info('updateTemp {}'.format(self.sensorID))
         self.updateInfo()
 
 
