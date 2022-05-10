@@ -33,10 +33,6 @@ class Controller(polyinterface.Controller):
     def start(self):
         LOGGER.debug('start - Temp Sensor controller')
         try:
-            #self.mySensors = W1ThermSensor.get_available_sensors()
-            #LOGGER.debug(self.mySensors)
-            #self.nbrSensors = len(self.mySensors)
-            #LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
             self.discover()
             self.setDriver('GV0', 1)
         except Exception as e:
@@ -89,6 +85,7 @@ class Controller(polyinterface.Controller):
         LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
         if 'tempUnit' in self.polyConfig['customParams']:
             temp = self.polyConfig['customParams']['tempUnit'][:1].upper()
+            logging.debug('tempUnit: {}'.format(temp))
             if temp == 'K':
                 self.tempUnit  = 2
             elif temp == 'F':
@@ -157,9 +154,6 @@ class TEMPsensor(polyinterface.Node):
         self.startTime = datetime.datetime.now()
         self.queue24H = []
         self.sensorID = str(sensorID)
-        self.tempUnit = self.parent.tempUnit
-
-
 
     def start(self):
         LOGGER.debug('TempSensor start')
@@ -172,15 +166,12 @@ class TEMPsensor(polyinterface.Node):
         self.currentTime = datetime.datetime.now()
         self.updateInfo()
         
-        LOGGER.debug(str(self.tempC) + ' TempSensor Reading')
-
+        LOGGER.debug('TempSensor Reading: {}'.format(self.tempC))
 
     def stop(self):
         LOGGER.debug('STOP - Cleaning up Temp Sensors')
     
 
-
-    # keep a 24H log om measuremets and keep Min and Max 
     def update24Hqueue (self):
         timeDiff = self.currentTime - self.startTime
         if self.tempMinC24HUpdated:
@@ -213,11 +204,11 @@ class TEMPsensor(polyinterface.Node):
             self.tempMax24HUpdated = True
         self.currentTime = datetime.datetime.now()
         
-        if self.tempUnit == 2:
+        if  self.parent.tempUnit == 2:
             self.setDriver('GV0', round(float(self.tempC+273.15),1), True, True, 26)
             self.setDriver('GV1', round(float(self.tempMinC24H+273.15),1), True, True, 26)
             self.setDriver('GV2', round(float(self.tempMaxC24H+273.15),1), True, True, 26)
-        elif self.tempUnit == 1:
+        elif self.parent.tempUnit == 1:
             self.setDriver('GV0', round(float(self.tempC*9/5+32),1), True, True, 17)
             self.setDriver('GV1', round(float(self.tempMinC24H*9/5+32),1), True, True, 17)
             self.setDriver('GV2', round(float(self.tempMaxC24H*9/5+32),1), True, True, 17)
@@ -225,7 +216,7 @@ class TEMPsensor(polyinterface.Node):
             self.setDriver('GV0', round(float(self.tempC),1), True, True, 4)
             self.setDriver('GV1', round(float(self.tempMinC24H),1), True, True, 4)
             self.setDriver('GV2', round(float(self.tempMaxC24H),1), True, True, 4)
-        self.setDriver('GV3', self.tempUnit, True, True)
+
         self.setDriver('GV6', int(self.currentTime.strftime("%m")))
         self.setDriver('GV7', int(self.currentTime.strftime("%d")))
         self.setDriver('GV8', int(self.currentTime.strftime("%Y")))
@@ -233,16 +224,8 @@ class TEMPsensor(polyinterface.Node):
         self.setDriver('GV10',int(self.currentTime.strftime("%M")))
         self.reportDrivers()
 
-        #return True                                                    
-    '''
-    def setTempUnit(self, command ):
-        LOGGER.info('setTempUnit {}'.format(self.sensorID))
-        self.tempUnit  = int(command.get('value'))
-        self.setDriver('GV3', self.tempUnit, True, True)  
-        self.addCustomParam({self.unitIndex:self.tempUnit })
-        #self.polyConfig['customParams'][self.unitIndex] = self.tempUnit 
-        self.updateInfo()        
-    '''
+                                             
+
 
     def updateTemp(self):
         LOGGER.info('updateTemp {}'.format(self.sensorID))
