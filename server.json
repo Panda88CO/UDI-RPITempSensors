@@ -12,9 +12,9 @@
         {
             "title": "RPI temp SensorsGPIO: a NodeServer to read Temp Sensors om RPI 1wire bus",
             "author": "Panda88CO",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "date": "May4, 2022",
-            "source": "https://https://github.com/Panda88CO/UDI-RPITempSensors",
+            "source": "https://https://github.com/Panda88CO/UDI-RPITempSensors.git",
             "license": "https://raw.githubusercontent.com/Panda88CO/UDI-RPITempSensors/master/LICENSE"
         }
     ]

@@ -19,6 +19,7 @@ class Controller(polyinterface.Controller):
         self.name = 'Rpi Temp Sensors'
         self.address = 'rpitemp'
         self.primary = self.address
+        self.tempUnit = 0 #default C
 
         try:
             os.system('modprobe w1-gpio')
@@ -47,7 +48,7 @@ class Controller(polyinterface.Controller):
 
     def stop(self):
         LOGGER.debug('stop - Cleaning up Temp Sensors')
-
+        self.poly.stop()
 
     def shortPoll(self):
         LOGGER.debug('shortPoll')
@@ -93,12 +94,20 @@ class Controller(polyinterface.Controller):
                self.addNode(TEMPsensor(self, self.address, address, name, currentSensor))
         
 
-    def check_params(self, command=None):
-        LOGGER.debug('Check Params' )
-       
+
+    def setTempUnit(self, command ):
+        LOGGER.debug('setTempUnit')
+        self.tempUnit  = int(command.get('value'))
+        self.setDriver('GV0', self.tempUnit, True, True)  
+        self.updateISYdrivers()        
+
+
     id = 'RPITEMP'
-    commands = {'DISCOVER': discover}
-    drivers = [{'driver': 'ST', 'value': 1, 'uom': 2}]
+    commands =  {'DISCOVER' : discover, 
+                 'TUNIT'    : setTempUnit}
+
+    drivers = [ {'driver': 'ST', 'value': 1, 'uom' : 2},
+                {'driver': 'GV0','value': 0, 'uom' : 25}]  # select between C and F
 
 
 class TEMPsensor(polyinterface.Node):
@@ -124,6 +133,7 @@ class TEMPsensor(polyinterface.Node):
 
     def stop(self):
         LOGGER.debug('STOP - Cleaning up Temp Sensors')
+    
 
 
     # keep a 24H log om measuremets and keep Min and Max 
@@ -157,9 +167,20 @@ class TEMPsensor(polyinterface.Node):
             self.tempMaxC24H = self.tempC
             self.tempMax24HUpdated = True
         self.currentTime = datetime.datetime.now()
-        self.setDriver('GV0', round(float(self.tempC),1))
-        self.setDriver('GV1', round(float(self.tempMinC24H),1))
-        self.setDriver('GV2', round(float(self.tempMaxC24H),1))
+        
+        if self.tempUnit == 2:
+            self.setDriver('GV0', round(float(self.tempC+373.15),1), True, True, 27)
+            self.setDriver('GV1', round(float(self.tempMinC24H+373.15),1), True, True, 27)
+            self.setDriver('GV2', round(float(self.tempMaxC24H+373.15),1), True, True, 27)
+        elif self.tempUnit == 1:
+            self.setDriver('GV0', round(float(self.tempC*9/5+32),1), True, True, 17)
+            self.setDriver('GV1', round(float(self.tempMinC24H*9/5+32),1), True, True, 17)
+            self.setDriver('GV2', round(float(self.tempMaxC24H*9/5+32),1), True, True, 17)
+        else:
+            self.setDriver('GV0', round(float(self.tempC),1), True, True, 4)
+            self.setDriver('GV1', round(float(self.tempMinC24H),1), True, True, 4)
+            self.setDriver('GV2', round(float(self.tempMaxC24H),1), True, True, 4)
+
         self.setDriver('GV6', int(self.currentTime.strftime("%m")))
         self.setDriver('GV7', int(self.currentTime.strftime("%d")))
         self.setDriver('GV8', int(self.currentTime.strftime("%Y")))

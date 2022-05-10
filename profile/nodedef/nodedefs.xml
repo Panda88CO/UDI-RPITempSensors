@@ -3,11 +3,15 @@
         <editors />
         <sts>
             <st id="ST" editor="BOOL" />
+            <st id="GV0" editor="TUNIT" />
         </sts>
         <cmds>
             <sends />
             <accepts>
                 <cmd id="DISCOVER" />
+                <cmd id="TUNIT" > 
+                    <p id="" editor="TUNIT" init="GV0" /> 
+                </cmd >
             </accepts>
         </cmds>
     </nodeDef>
