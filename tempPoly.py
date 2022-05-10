@@ -3,9 +3,9 @@
 import polyinterface
 import sys
 import os
-import time
 import datetime
 import os
+import logging
 from subprocess import call
 from w1thermsensor import W1ThermSensor, Sensor, Unit
 
