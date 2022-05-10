@@ -4,11 +4,12 @@
 (Only tested with 2 sensors this far)
 > Sensors can be bought on Amazon or similar - search for DS18B20 - remember 4.7K resistor is usually not included, but some kit do - also one need to connect to the RPI header 
 
-> shortPoll updates temperature
-> longPoll logs values for 24Hour Min/Max
+> shortPoll updates temperature and - send heartBeast 
+> longPoll logs values for 24Hour Min/Max 
 
 >Use custom config parameters to name sensors in node server/ISY.  
 Sensors shows up with NoName when found - Name them to desired disply in ISY
+Default temp unit can also be set (only uses first Char)
 
 
 > Uses W1ThemSensor library - more info can be found there <https://github.com/timofurrer/w1thermsensor>

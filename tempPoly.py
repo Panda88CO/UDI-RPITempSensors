@@ -20,8 +20,7 @@ class Controller(polyinterface.Controller):
         self.name = 'Rpi Temp Sensors'
         self.address = 'rpitemp'
         self.primary = self.address
-        self.poly = polyglot
-
+        self.hb = 0
         try:
             os.system('modprobe w1-gpio')
             os.system('modprobe w1-therm')
@@ -54,11 +53,13 @@ class Controller(polyinterface.Controller):
 
     def shortPoll(self):
         LOGGER.debug('shortPoll')
+
         for node in self.nodes:
             self.nodes[node].updateInfo()
             
     def longPoll(self):
         LOGGER.debug('longPoll')
+        self.heartbeat()
         for node in self.nodes:
             self.nodes[node].updateInfo()
             self.nodes[node].update24Hqueue()
@@ -71,6 +72,14 @@ class Controller(polyinterface.Controller):
         LOGGER.debug('Update Info')
         pass
 
+    def heartbeat(self):
+        logging.debug('heartbeat: ' + str(self.hb))
+        if self.hb == 0:
+            self.reportCmd('DON',2)
+            self.hb = 1
+        else:
+            self.reportCmd('DOF',2)
+            self.hb = 0
 
     def discover(self):
         LOGGER.info('discover')

@@ -6,10 +6,11 @@ This Poly provides an interface between [Raspberry Pi ](https://www.raspberrypi.
 
 ### Installation instructions
 Install from node server store 
+Use customer config to set default temp unit and names of probes
 
 
 ### Notes
-
+Sends a heartbeat back to ISY durign shortpoll
 
 Thanks and good luck.
 

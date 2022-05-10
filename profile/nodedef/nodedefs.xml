@@ -7,7 +7,10 @@
 
         </sts>
         <cmds>
-            <sends />
+            <sends>
+                <cmd id="DON" /> 
+                <cmd id="DOF" /> 
+            </sends>
             <accepts>
                 <cmd id="DISCOVER" />
                 <cmd id="TUNIT" > 
@@ -30,9 +33,7 @@
 
         </sts>
         <cmds>
-            <sends>
-                <cmd id="UPDATE" />
-            </sends>
+            <sends />
             <accepts>
                 <cmd id="UPDATE" />
             </accepts >
