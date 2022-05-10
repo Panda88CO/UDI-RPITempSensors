@@ -185,25 +185,30 @@ class TEMPsensor(polyinterface.Node):
         #return True                                                    
         
     def setTempUnit(self, command ):
-        LOGGER.debug('setTempUnit')
+        LOGGER.debug('setTempUnit {}'.format(self.sensorID))
         self.tempUnit  = int(command.get('value'))
         self.setDriver('GV3', self.tempUnit, True, True)  
         self.updateISYdrivers()        
+
+    def updateTemp(self):
+        LOGGER.debug('updateTemp {}'.format(self.sensorID))
+        self.updateInfo()
 
 
     drivers = [{'driver': 'GV0', 'value': 0, 'uom': 4},
                {'driver': 'GV1', 'value': 0, 'uom': 4},
                {'driver': 'GV2', 'value': 0, 'uom': 4},   
-               {'driver': 'GV3', 'value': 0, 'uom': 25},                         
+               {'driver': 'GV3', 'value': 0, 'uom': 25},     
+               {'driver': 'GV9', 'value': 0, 'uom': 20},              
+               {'driver': 'GV10', 'value': 0, 'uom': 44}                         
                {'driver': 'GV6', 'value': 0, 'uom': 47},               
                {'driver': 'GV7', 'value': 0, 'uom': 9},
                {'driver': 'GV8', 'value': 0, 'uom': 77},              
-               {'driver': 'GV9', 'value': 0, 'uom': 20},              
-               {'driver': 'GV10', 'value': 0, 'uom': 44}      
+ 
               ]
     id = 'TEMPSENSOR'
     
-    commands = { 'UPDATE'   : updateInfo,
+    commands = { 'UPDATE'   : updateTemp,
                  'TUNIT'    : setTempUnit} 
 
 
