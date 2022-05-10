@@ -174,7 +174,7 @@ class TEMPsensor(polyinterface.Node):
             self.setDriver('GV0', round(float(self.tempC),1), True, True, 4)
             self.setDriver('GV1', round(float(self.tempMinC24H),1), True, True, 4)
             self.setDriver('GV2', round(float(self.tempMaxC24H),1), True, True, 4)
-
+        self.setDriver('GV3', self.tempUnit, True, True)
         self.setDriver('GV6', int(self.currentTime.strftime("%m")))
         self.setDriver('GV7', int(self.currentTime.strftime("%d")))
         self.setDriver('GV8', int(self.currentTime.strftime("%Y")))
@@ -188,7 +188,7 @@ class TEMPsensor(polyinterface.Node):
         LOGGER.debug('setTempUnit {}'.format(self.sensorID))
         self.tempUnit  = int(command.get('value'))
         self.setDriver('GV3', self.tempUnit, True, True)  
-        self.updateISYdrivers()        
+        self.updateInfo()        
 
     def updateTemp(self):
         LOGGER.debug('updateTemp {}'.format(self.sensorID))
@@ -200,12 +200,11 @@ class TEMPsensor(polyinterface.Node):
                {'driver': 'GV2', 'value': 0, 'uom': 4},   
                {'driver': 'GV3', 'value': 0, 'uom': 25},     
                {'driver': 'GV9', 'value': 0, 'uom': 20},              
-               {'driver': 'GV10', 'value': 0, 'uom': 44}                         
+               {'driver': 'GV10', 'value': 0, 'uom': 44},                        
                {'driver': 'GV6', 'value': 0, 'uom': 47},               
                {'driver': 'GV7', 'value': 0, 'uom': 9},
-               {'driver': 'GV8', 'value': 0, 'uom': 77},              
- 
-              ]
+               {'driver': 'GV8', 'value': 0, 'uom': 77},
+                ]
     id = 'TEMPSENSOR'
     
     commands = { 'UPDATE'   : updateTemp,
