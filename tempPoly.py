@@ -25,10 +25,10 @@ class Controller(polyinterface.Controller):
         try:
             os.system('modprobe w1-gpio')
             os.system('modprobe w1-therm')
-            self.setDriver('ST', 1)
+            self.setDriver('GV0', 1)
         except:
             LOGGER.debug('modprobe OS calls not successful')
-            self.setDriver('ST', 0)
+            self.setDriver('GV0', 0)
 
 
     def start(self):
@@ -39,10 +39,10 @@ class Controller(polyinterface.Controller):
             #self.nbrSensors = len(self.mySensors)
             #LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
             self.discover()
-            self.setDriver('ST', 1)
+            self.setDriver('GV0', 1)
         except Exception as e:
             LOGGER.info('ERROR initializing w1thermSensors: {}'.format(e))
-            self.setDriver('ST', 0)
+            self.setDriver('GV0', 0)
             self.stop()
 
         self.updateInfo()
@@ -101,7 +101,7 @@ class Controller(polyinterface.Controller):
     commands =  {'DISCOVER' : discover} 
 
 
-    drivers = [ {'driver': 'ST', 'value': 1, 'uom' : 25},
+    drivers = [ {'driver': 'GV0', 'value': 1, 'uom' : 25},
                 ] 
 
 

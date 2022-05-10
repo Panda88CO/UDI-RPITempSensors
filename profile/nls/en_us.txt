@@ -2,13 +2,10 @@
 ND-RPITEMP-NAME = RPi Temp Controller
 ND-RPITEMP-ICON = GenericCtl
 CMD-TEMP-DISCOVER-NAME = Update
-ST-TEMP-ST-NAME = NodeServer Status
+ST-TEMP-GV0-NAME = NodeServer Status
 STATUS-0 = Offline
 STATUS-1 = OnlIne
 
-TUNIT-0 = Celcius
-TUNIT-1 = Fahrenheit
-TUNIT-2 = Kelvin
 
 # Temp Sensor
 ND-TEMPSENSOR-NAME = Temp Sensor
@@ -25,3 +22,6 @@ ST-SENSOR-GV10-NAME = Time-Min
 CMD-SENSOR-UPDATE-NAME = Update Temp
 CMD-SENSOR-TUNIT-NAME = Set Temp Unit
 
+TUNIT-0 = Celcius
+TUNIT-1 = Fahrenheit
+TUNIT-2 = Kelvin
