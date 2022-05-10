@@ -15,7 +15,7 @@ LOGGER = polyinterface.LOGGER
 class Controller(polyinterface.Controller):
     def __init__(self, polyglot):
         super().__init__(polyglot)
-        LOGGER.setLevel(logging.INFO)
+        LOGGER.setLevel(logging.DEBUG)
         LOGGER.info('_init_')
         self.name = 'Rpi Temp Sensors'
         self.address = 'rpitemp'
@@ -53,13 +53,12 @@ class Controller(polyinterface.Controller):
 
     def shortPoll(self):
         LOGGER.debug('shortPoll')
-
+        self.heartbeat()
         for node in self.nodes:
             self.nodes[node].updateInfo()
             
     def longPoll(self):
         LOGGER.debug('longPoll')
-        self.heartbeat()
         for node in self.nodes:
             self.nodes[node].updateInfo()
             self.nodes[node].update24Hqueue()
