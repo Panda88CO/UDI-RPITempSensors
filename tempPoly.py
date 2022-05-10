@@ -19,7 +19,7 @@ class Controller(polyinterface.Controller):
         self.name = 'Rpi Temp Sensors'
         self.address = 'rpitemp'
         self.primary = self.address
-        self.tempUnit = 0 #default C
+        self.poly = polyglot
 
         try:
             os.system('modprobe w1-gpio')
@@ -43,12 +43,13 @@ class Controller(polyinterface.Controller):
             LOGGER.info('ERROR initializing w1thermSensors: {}'.format(e))
             self.setDriver('ST', 0)
             self.stop()
+
         self.updateInfo()
         self.reportDrivers()
 
     def stop(self):
         LOGGER.debug('stop - Cleaning up Temp Sensors')
-        self.poly.stop()
+
 
     def shortPoll(self):
         LOGGER.debug('shortPoll')
@@ -92,19 +93,12 @@ class Controller(polyinterface.Controller):
             #LOGGER.debug( address + ' '+ name + ' ' + currentSensor)
             if not address in self.nodes:
                self.addNode(TEMPsensor(self, self.address, address, name, currentSensor))
-        
 
-
-    def setTempUnit(self, command ):
-        LOGGER.debug('setTempUnit')
-        self.tempUnit  = int(command.get('value'))
-        self.setDriver('GV0', self.tempUnit, True, True)  
-        self.updateISYdrivers()        
 
 
     id = 'RPITEMP'
-    commands =  {'DISCOVER' : discover, 
-                 'TUNIT'    : setTempUnit}
+    commands =  {'DISCOVER' : discover} 
+
 
     drivers = [ {'driver': 'ST', 'value': 1, 'uom' : 2},
                 {'driver': 'GV0','value': 0, 'uom' : 25}]  # select between C and F
@@ -116,7 +110,7 @@ class TEMPsensor(polyinterface.Node):
         self.startTime = datetime.datetime.now()
         self.queue24H = []
         self.sensorID = str(sensorID)
-
+        self.tempUnit = 0 #default C
 
     def start(self):
         LOGGER.debug('TempSensor start')
@@ -190,12 +184,17 @@ class TEMPsensor(polyinterface.Node):
 
         #return True                                                    
         
-    
+    def setTempUnit(self, command ):
+        LOGGER.debug('setTempUnit')
+        self.tempUnit  = int(command.get('value'))
+        self.setDriver('GV3', self.tempUnit, True, True)  
+        self.updateISYdrivers()        
 
 
     drivers = [{'driver': 'GV0', 'value': 0, 'uom': 4},
                {'driver': 'GV1', 'value': 0, 'uom': 4},
-               {'driver': 'GV2', 'value': 0, 'uom': 4},          
+               {'driver': 'GV2', 'value': 0, 'uom': 4},   
+               {'driver': 'GV3', 'value': 0, 'uom': 25},                         
                {'driver': 'GV6', 'value': 0, 'uom': 47},               
                {'driver': 'GV7', 'value': 0, 'uom': 9},
                {'driver': 'GV8', 'value': 0, 'uom': 77},              
@@ -204,7 +203,8 @@ class TEMPsensor(polyinterface.Node):
               ]
     id = 'TEMPSENSOR'
     
-    commands = { 'UPDATE': updateInfo }
+    commands = { 'UPDATE'   : updateInfo,
+                 'TUNIT'    : setTempUnit} 
 
 
 

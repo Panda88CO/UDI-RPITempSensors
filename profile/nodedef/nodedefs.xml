@@ -3,15 +3,11 @@
         <editors />
         <sts>
             <st id="ST" editor="BOOL" />
-            <st id="GV0" editor="TUNIT" />
         </sts>
         <cmds>
             <sends />
             <accepts>
                 <cmd id="DISCOVER" />
-                <cmd id="TUNIT" > 
-                    <p id="" editor="TUNIT" init="GV0" /> 
-                </cmd >
             </accepts>
         </cmds>
     </nodeDef>
@@ -21,6 +17,7 @@
             <st id="GV0" editor="TEMPC" />
             <st id="GV1" editor="TEMPC24H_MIN" />
             <st id="GV2" editor="TEMPC24H_MAX" />            
+            <st id="GV3" editor="TUNIT" />
             <st id="GV6" editor="LAST_UPDATE_MO" />
             <st id="GV7" editor="LAST_UPDATE_D" /> 
             <st id="GV8" editor="LAST_UPDATE_Y" />                
@@ -33,6 +30,9 @@
             </sends>
             <accepts>
                 <cmd id="UPDATE" />
+                <cmd id="TUNIT" > 
+                    <p id="" editor="TUNIT" init="GV3" /> 
+                </cmd >
             </accepts >
         </cmds>
     </nodeDef>
