@@ -98,6 +98,7 @@ class Controller(polyinterface.Controller):
         else:
             self.tempUnit = 0 #default to C
             self.addCustomParam({'tempUnit': 'Celcius'})
+        self.setDriver('GV3', self.tempUnit, True, True)  
         for mySensor in self.mySensors:
             count = count+1
             currentSensor = mySensor.id.lower() 
@@ -126,7 +127,7 @@ class Controller(polyinterface.Controller):
     def setTempUnit(self, command ):
         LOGGER.info('setTempUnit {}'.format(self.sensorID))
         self.tempUnit  = int(command.get('value'))
-        self.setDriver('GV3', self.tempUnit, True, True)  
+        
         if 'tempUnit' in self.polyConfig['customParams']:
             if self.tempUnit  == 2:
                 self.polyConfig['customParams']['tempUnit'] = 'Kelvin'
@@ -138,15 +139,16 @@ class Controller(polyinterface.Controller):
             self.tempUnit = 0 #default to C
             self.addCustomParam({'tempUnit': 'Celcius'})
         #self.polyConfig['customParams'][self.unitIndex] = self.tempUnit 
-        self.updateInfo()   
+        self.setDriver('GV3', self.tempUnit, True, True)  
+
 
 
     id = 'RPITEMP'
     commands =  {'DISCOVER' : discover, 'TUNIT'    : setTempUnit} 
 
 
-    drivers = [ {'driver': 'GV0', 'value': 1, 'uom' : 25},
-                {'driver': 'GV2', 'value': 1, 'uom' : 25},] 
+    drivers = [ {'driver': 'GV0', 'value': 0, 'uom' : 25},
+                {'driver': 'GV3', 'value': 0, 'uom' : 25},] 
 
 
 class TEMPsensor(polyinterface.Node):
