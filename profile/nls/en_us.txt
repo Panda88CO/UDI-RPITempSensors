@@ -3,6 +3,7 @@ ND-RPITEMP-NAME = RPi Temp Controller
 ND-RPITEMP-ICON = GenericCtl
 CMD-TEMP-DISCOVER-NAME = Update
 ST-TEMP-GV0-NAME = NodeServer Status
+ST-TEMP-GV3-NAME = Temp Unit
 STATUS-0 = Offline
 STATUS-1 = OnlIne
 
@@ -13,7 +14,7 @@ ND-TEMPSENSOR-ICON = TempSensor
 ST-SENSOR-GV0-NAME = Current Temp
 ST-SENSOR-GV1-NAME = Temp Min 24H
 ST-SENSOR-GV2-NAME = Temp Max 24H
-ST-SENSOR-GV3-NAME = Temp Unit
+
 ST-SENSOR-GV6-NAME = Date-Month
 ST-SENSOR-GV7-NAME = Date-Day
 ST-SENSOR-GV8-NAME = Date-Year 
