@@ -111,9 +111,18 @@ class Controller(polyinterface.Controller):
                LOGGER.info('Default Naming')
                name = 'Sensor'+str(count)
                self.polyConfig['customParams'][currentSensor] = name
+            
+            if (currentSensor+'tComp') in self.polyConfig['customParams']:
+               LOGGER.info('A customParams offset exist')
+               tComp = self.polyConfig['customParams'][currentSensor+'tComp']
+            else:
+               LOGGER.info('Creating Temp Offset param')
+               self.polyConfig['customParams'][currentSensor+'tComp'] = 0.0 
+
                self.addCustomParam({currentSensor: name})
+               self.addCustomParam({currentSensor+'tComp': 0.0})
             LOGGER.debug('Addning node {}, {}, {}'.format(address, name, currentSensor))
-            self.addNode(TEMPsensor(self, self.address, address, name, currentSensor), True)
+            self.addNode(TEMPsensor(self, self.address, address, name, currentSensor, tComp), True)
     
         self.reportDrivers()
 
@@ -144,11 +153,12 @@ class Controller(polyinterface.Controller):
 
 
 class TEMPsensor(polyinterface.Node):
-    def __init__(self, controller, primary, address, name, sensorID):
+    def __init__(self, controller, primary, address, name, sensorID, tempComp):
         super().__init__(controller, primary, address, name)
         self.startTime = datetime.datetime.now()
         self.queue24H = []
         self.sensorID = str(sensorID)
+        self.tempComp = tempComp
 
     def start(self):
         LOGGER.debug('TempSensor start')
@@ -200,17 +210,17 @@ class TEMPsensor(polyinterface.Node):
         self.currentTime = datetime.datetime.now()
         
         if  self.parent.tempUnit == 2:
-            self.setDriver('GV0', round(float(self.tempC+273.15),1), True, True, 26)
-            self.setDriver('GV1', round(float(self.tempMinC24H+273.15),1), True, True, 26)
-            self.setDriver('GV2', round(float(self.tempMaxC24H+273.15),1), True, True, 26)
+            self.setDriver('GV0', round(float(self.tempC+273.15+self.tempComp),1), True, True, 26)
+            self.setDriver('GV1', round(float(self.tempMinC24H+273.15+self.tempComp),1), True, True, 26)
+            self.setDriver('GV2', round(float(self.tempMaxC24H+273.15+self.tempComp),1), True, True, 26)
         elif self.parent.tempUnit == 1:
-            self.setDriver('GV0', round(float(self.tempC*9/5+32),1), True, True, 17)
-            self.setDriver('GV1', round(float(self.tempMinC24H*9/5+32),1), True, True, 17)
-            self.setDriver('GV2', round(float(self.tempMaxC24H*9/5+32),1), True, True, 17)
+            self.setDriver('GV0', round(float(self.tempC*9/5+32+self.tempComp),1), True, True, 17)
+            self.setDriver('GV1', round(float(self.tempMinC24H*9/5+32+self.tempComp),1), True, True, 17)
+            self.setDriver('GV2', round(float(self.tempMaxC24H*9/5+32+self.tempComp),1), True, True, 17)
         else:
-            self.setDriver('GV0', round(float(self.tempC),1), True, True, 4)
-            self.setDriver('GV1', round(float(self.tempMinC24H),1), True, True, 4)
-            self.setDriver('GV2', round(float(self.tempMaxC24H),1), True, True, 4)
+            self.setDriver('GV0', round(float(self.tempC+self.tempComp),1), True, True, 4)
+            self.setDriver('GV1', round(float(self.tempMinC24H+self.tempComp),1), True, True, 4)
+            self.setDriver('GV2', round(float(self.tempMaxC24H+self.tempComp),1), True, True, 4)
 
         self.setDriver('GV6', int(self.currentTime.strftime("%m")))
         self.setDriver('GV7', int(self.currentTime.strftime("%d")))
