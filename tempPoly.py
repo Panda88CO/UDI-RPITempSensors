@@ -108,19 +108,20 @@ class Controller(polyinterface.Controller):
                LOGGER.info('A customParams name for sensor detected')
                name = self.polyConfig['customParams'][currentSensor]
             else:
-               LOGGER.info('Default Naming')
-               name = 'Sensor'+str(count)
-               self.polyConfig['customParams'][currentSensor] = name
-            
-            if ('tComp_'+currentSensor) in self.polyConfig['customParams']:
-               LOGGER.info('A customParams offset exist')
-               tComp = self.polyConfig['customParams']['tComp_'+currentSensor]
-            else:
-               LOGGER.info('Creating Temp Offset param')
-               self.polyConfig['customParams']['tComp_'+currentSensor] = 0.0 
+                LOGGER.info('Default Naming')
+                name = 'Sensor'+str(count)
+                self.polyConfig['customParams'][currentSensor] = name
+                self.addCustomParam({currentSensor: name})
 
-               self.addCustomParam({currentSensor: name})
-               self.addCustomParam({'tComp_'+currentSensor: 0.0})
+            if ('tComp_'+currentSensor) in self.polyConfig['customParams']:
+                LOGGER.info('A customParams offset exist')
+                tComp = float(self.polyConfig['customParams']['tComp_'+currentSensor])
+            else:
+                LOGGER.info('Creating Temp Offset param')
+                tComp = 0.0
+                self.polyConfig['customParams']['tComp_'+currentSensor] = tComp        
+                self.addCustomParam({'tComp_'+currentSensor: 0.0})
+
             LOGGER.debug('Addning node {}, {}, {}'.format(address, name, currentSensor))
             self.addNode(TEMPsensor(self, self.address, address, name, currentSensor, tComp), True)
     
@@ -158,7 +159,7 @@ class TEMPsensor(polyinterface.Node):
         self.startTime = datetime.datetime.now()
         self.queue24H = []
         self.sensorID = str(sensorID)
-        self.tempComp = tempComp
+        self.tempComp = float(tempComp)
 
     def start(self):
         LOGGER.debug('TempSensor start')
@@ -171,7 +172,7 @@ class TEMPsensor(polyinterface.Node):
         self.currentTime = datetime.datetime.now()
         self.updateInfo()
         
-        LOGGER.debug('TempSensor Reading: {}'.format(self.tempC))
+        LOGGER.debug('TempSensor Reading (uncompensateed): {}'.format(self.tempC))
 
     def stop(self):
         LOGGER.debug('STOP - Cleaning up Temp Sensors')
@@ -200,7 +201,7 @@ class TEMPsensor(polyinterface.Node):
     def updateInfo(self):
         LOGGER.debug('TempSensor updateInfo')
         self.tempC = self.sensor.get_temperature(Unit.DEGREES_C)
-        LOGGER.info('TempSensor: {} updateInfo: temp(C): {}'.format(self.sensorID, self.tempC))
+        LOGGER.info('TempSensor: {} updateInfo: temp(C) - uncompensated: {}'.format(self.sensorID, self.tempC))
         if self.tempC < self.tempMinC24H:
             self.tempMinC24H = self.tempC
             self.tempMin24HUpdated = True
