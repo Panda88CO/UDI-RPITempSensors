@@ -4,6 +4,7 @@ import polyinterface
 import sys
 import os
 import datetime
+import time
 import os
 import logging
 from subprocess import call
@@ -15,10 +16,10 @@ LOGGER = polyinterface.LOGGER
 class Controller(polyinterface.Controller):
     def __init__(self, polyglot):
         super().__init__(polyglot)
-        LOGGER.setLevel(logging.DEBUG)
+        LOGGER.setLevel(logging.INFO)
         LOGGER.info('_init_')
         self.name = 'Rpi Temp Sensors'
-        self.address = 'rpitemp'
+        self.address = 'controller'
         self.primary = self.address
         self.hb = 0
         try:
@@ -77,12 +78,13 @@ class Controller(polyinterface.Controller):
             self.hb = 0
 
     def discover(self, command = None):
-        LOGGER.info('discover')
+        LOGGER.info('Discover')
+        #LOGGER.info('cutsomParams {}'.format(self.polyConfig['customParams']))
         count = 0
         self.mySensors = W1ThermSensor.get_available_sensors()
-        LOGGER.debug(self.mySensors)
+        #LOGGER.debug(self.mySensors)
         self.nbrSensors = len(self.mySensors)
-        LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
+        #LOGGER.info( str(self.nbrSensors) + ' Sensors detected')
         if 'tempUnit' in self.polyConfig['customParams']:
             temp = self.polyConfig['customParams']['tempUnit'][:1].upper()
             logging.debug('tempUnit: {}'.format(temp))
@@ -103,23 +105,17 @@ class Controller(polyinterface.Controller):
             address = 'rpitemp'+str(count)
             # check if sensor serial number exist in custom parapms and then replace name
             if currentSensor in self.polyConfig['customParams']:
-               LOGGER.debug('A customParams name for sensor detected')
+               LOGGER.info('A customParams name for sensor detected')
                name = self.polyConfig['customParams'][currentSensor]
             else:
-               LOGGER.debug('Default Naming')
+               LOGGER.info('Default Naming')
                name = 'Sensor'+str(count)
                self.polyConfig['customParams'][currentSensor] = name
                self.addCustomParam({currentSensor: name})
-            #LOGGER.debug( address + ' '+ name + ' ' + currentSensor)
-            if not address in self.nodes :
-               self.addNode(TEMPsensor(self, self.address, address, name, currentSensor))
-            else:
-                tmpNode = self.nodes[address]
-                if tmpNode.name != name: # name has been changed 
-                    self.delNode(tmpNode)
-                    self.addNode(TEMPsensor(self, self.address, address, name, currentSensor))
-       
-        LOGGER.info('discover found {} sensors: {}'.format(count, self.mySensors ))
+            LOGGER.debug('Addning node {}, {}, {}'.format(address, name, currentSensor))
+            self.addNode(TEMPsensor(self, self.address, address, name, currentSensor), True)
+    
+        self.reportDrivers()
 
     def setTempUnit(self, command ):
         LOGGER.info('setTempUnit')
@@ -135,7 +131,6 @@ class Controller(polyinterface.Controller):
         else:
             self.tempUnit = 0 #default to C
             self.addCustomParam({'tempUnit': 'Celcius'})
-        #self.polyConfig['customParams'][self.unitIndex] = self.tempUnit 
         self.setDriver('GV3', self.tempUnit, True, True)  
         self.longPoll()
 

@@ -10,7 +10,8 @@ Use customer config to set default temp unit and names of probes
 
 
 ### Notes
-Sends a heartbeat back to ISY durign shortpoll
+Sends a heartbeat back to ISY during shortpoll
+There is a bug preventing node name update.  To update erase node (click delete) in polyglot interface and restart.   
 
 Thanks and good luck.
 
