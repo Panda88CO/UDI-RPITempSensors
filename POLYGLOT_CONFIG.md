@@ -4,7 +4,7 @@
 (Only tested with 2 sensors this far)
 > Sensors can be bought on Amazon or similar - search for DS18B20 - remember 4.7K resistor is usually not included, but some kit do - also one need to connect to the RPI header 
 
-> shortPoll updates temperature and - send heartBeast 
+> shortPoll updates temperature and - sends heartBeast 
 > longPoll logs values for 24Hour Min/Max 
 
 >Use custom config parameters to name sensors in node server/ISY.  

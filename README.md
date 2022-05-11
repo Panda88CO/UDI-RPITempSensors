@@ -7,7 +7,7 @@ This Poly provides an interface between [Raspberry Pi ](https://www.raspberrypi.
 ### Installation instructions
 Install from node server store 
 Use customer config to set default temp unit and names of probes
-
+Added support for offset for each probe - offset is specified in unit chosen 
 
 ### Notes
 Sends a heartbeat back to ISY during shortpoll

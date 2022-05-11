@@ -69,7 +69,7 @@ class Controller(polyinterface.Controller):
         pass
 
     def heartbeat(self):
-        logging.debug('heartbeat: ' + str(self.hb))
+        LOGGER.debug('heartbeat: ' + str(self.hb))
         if self.hb == 0:
             self.reportCmd('DON',2)
             self.hb = 1
