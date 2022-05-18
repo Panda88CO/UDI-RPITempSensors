@@ -1,5 +1,5 @@
 <nodeDefs>
-    <nodeDef id="RPITEMP" nls="TEMP">
+    <nodeDef id="controller" nls="TEMP">
         <editors />
         <sts>
             <st id="GV0" editor="BOOL" />

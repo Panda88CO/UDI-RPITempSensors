@@ -175,10 +175,12 @@ class Controller(polyinterface.Controller):
                name = self.polyConfig['customParams'][currentSensor]
             else:
                 LOGGER.debug('Default Naming')
-                #name = 'Sensor'+str(count)
-                #self.polyConfig['customParams'][currentSensor] = name
+                name = None
+                self.polyConfig['customParams'][currentSensor] = name
                 self.addCustomParam({currentSensor: None})
-
+                name = None
+                self.addNotice('Please name sensor {} in configuration and restart:'.format(currentSensor))
+                self.stop()
             if ('offset_'+currentSensor) in self.polyConfig['customParams']:
                 LOGGER.info('A customParams offset exist')
                 tComp = float(self.polyConfig['customParams']['offset_'+currentSensor])
@@ -187,10 +189,10 @@ class Controller(polyinterface.Controller):
                 tComp = 0.0
                 self.polyConfig['customParams']['offset_'+currentSensor] = tComp        
                 self.addCustomParam({'offset_'+currentSensor: 0.0})
-
-            LOGGER.info('Addning node {}, {}, {}'.format(address, name, currentSensor))
-            self.addNode(TEMPsensor(self, self.address, address, name, currentSensor, tComp), True)
-            self.sensorList.append(address)
+            if name :
+                LOGGER.info('Addning node {}, {}, {}'.format(address, name, currentSensor))
+                self.addNode(TEMPsensor(self, self.address, address, name, currentSensor, tComp), True)
+                self.sensorList.append(address)
         if 'displayEnabled' in self.polyConfig['customParams']:
             temp = int(str(self.polyConfig['customParams']['displayEnabled']))
             self.LCDdisplayEn = (temp == 1) 
@@ -323,7 +325,7 @@ class Controller(polyinterface.Controller):
         self.longPoll()
 
 
-    id = 'RPITEMP'
+    id = 'controller'
     commands =  {'DISCOVER' : discover, 'TUNIT'    : setTempUnit} 
 
 

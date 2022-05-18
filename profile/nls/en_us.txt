@@ -1,6 +1,6 @@
 # Temp Sensor controller
-ND-RPITEMP-NAME = RPi Temp Controller
-ND-RPITEMP-ICON = GenericCtl
+ND-controller-NAME = RPi Temp Controller
+ND-controller-ICON = TempSensor
 CMD-TEMP-DISCOVER-NAME = Update
 CMD-TEMP-TUNIT-NAME = Set Temp Unit
 
