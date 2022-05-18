@@ -179,14 +179,14 @@ class Controller(polyinterface.Controller):
                 self.polyConfig['customParams'][currentSensor] = name
                 self.addCustomParam({currentSensor: name})
 
-            if ('tComp_'+currentSensor) in self.polyConfig['customParams']:
+            if ('offset_'+currentSensor) in self.polyConfig['customParams']:
                 LOGGER.info('A customParams offset exist')
                 tComp = float(self.polyConfig['customParams']['tComp_'+currentSensor])
             else:
                 LOGGER.debug('Creating Temp Offset param')
                 tComp = 0.0
-                self.polyConfig['customParams']['tComp_'+currentSensor] = tComp        
-                self.addCustomParam({'tComp_'+currentSensor: 0.0})
+                self.polyConfig['customParams']['offset_'+currentSensor] = tComp        
+                self.addCustomParam({'offset_'+currentSensor: 0.0})
 
             LOGGER.info('Addning node {}, {}, {}'.format(address, name, currentSensor))
             self.addNode(TEMPsensor(self, self.address, address, name, currentSensor, tComp), True)

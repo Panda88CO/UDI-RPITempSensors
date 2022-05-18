@@ -11,7 +11,7 @@
 Sensors <sensorId> shows up with NoName when found - Name them to desired disply in ISY
 
 tempUnit: Specifies the temp unit (C,F,K) to be displayed (only uses first Char)
-tCpom_<sensorId>: Probe temperature conpensation - specified using tempUnit
+ofset_<sensorId>: Probe temperature offset/compensation - specified using tempUnit
 
 displayEnabled: 1 - display enabled, 0 - display diabled
 DisplpaySensor: MULTISENSORS specifies rolling display (updated every shortPoll) between multiple Sensors
