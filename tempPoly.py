@@ -29,6 +29,7 @@ class Controller(polyinterface.Controller):
         self.hb = 0
         self.displayRow = 4
         self.displayCol = 20
+        self.LCDdisplayEn = False
         try:
             os.system('modprobe w1-gpio')
             os.system('modprobe w1-therm')
@@ -56,7 +57,8 @@ class Controller(polyinterface.Controller):
 
     def stop(self):
         LOGGER.info('stop - Cleaning up Temp Sensors')
-        self.lcd.close(clear=True)
+        if self.lcd:
+            self.lcd.close(clear=True)
 
     def shortPoll(self):
         LOGGER.debug('shortPoll')
