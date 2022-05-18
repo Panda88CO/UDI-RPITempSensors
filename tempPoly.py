@@ -193,6 +193,9 @@ class Controller(polyinterface.Controller):
         if 'displayEnabled' in self.polyConfig['customParams']:
             temp = int(str(self.polyConfig['customParams']['displayEnabled']))
             self.LCDdisplayEn = (temp == 1) 
+            if self.LCDdisplayEn  and 'DisplaySensor' not in self.polyConfig['customParams']:
+                self.addNotice('Please restart and then configure display parameters')
+                self.stop()
         else:
             self.polyConfig['customParams']['displayEnabled'] = 0
             self.LCDdisplayEn = False
