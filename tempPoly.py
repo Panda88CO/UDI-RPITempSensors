@@ -77,8 +77,7 @@ class Controller(polyinterface.Controller):
                     if name == self.nodes[node].name:
                         self.lcdUpdate (node)
 
-
-            
+       
     def longPoll(self):
         LOGGER.debug('longPoll')
         #LOGGER.debug(self.nodes)
@@ -94,20 +93,23 @@ class Controller(polyinterface.Controller):
             tempMaxStr = 'Max Temp: {}{}'.format(self.nodes[node].tempDisplayMax,self.tempUnitStr()) 
             timeStr = self.nodes[node].currentTime.strftime("%m/%d/%y %H:%M").center(20)
             for dispLine in range(0,4):
-                self.lcd.cursor_pos = (dispLine,0)   
-                if self.LCDdisplay[dispLine] == 'TEXT':
-                    self.lcd.write_string(self.LCDdisplayText[:20].center(20))
-                elif self.LCDdisplay[dispLine] == 'TEMP':
-                    self.lcd.write_string(tempStr[:20].center(20))
-                elif self.LCDdisplay[dispLine] == 'TEMPMAX':
-                    self.lcd.write_string(tempMaxStr[:20].center(20))
-                elif self.LCDdisplay[dispLine] == 'TEMPMIN':
-                    self.lcd.write_string(tempMinStr[:20].center(20))
-                elif self.LCDdisplay[dispLine] == 'TIME':
-                    self.lcd.write_string(timeStr[:20].center(20))
+                self.lcd.cursor_pos = (dispLine,0) 
+                if dispLine in self.LCDdisplay:  
+                    if self.LCDdisplay[dispLine] == 'TEXT':
+                        self.lcd.write_string(self.LCDdisplayText[:20].center(20))
+                    elif self.LCDdisplay[dispLine] == 'TEMP':
+                        self.lcd.write_string(tempStr[:20].center(20))
+                    elif self.LCDdisplay[dispLine] == 'TEMPMAX':
+                        self.lcd.write_string(tempMaxStr[:20].center(20))
+                    elif self.LCDdisplay[dispLine] == 'TEMPMIN':
+                        self.lcd.write_string(tempMinStr[:20].center(20))
+                    elif self.LCDdisplay[dispLine] == 'TIME':
+                        self.lcd.write_string(timeStr[:20].center(20))
+                    else:
+                        strTemp = '{} -Unknown type'.format(self.LCDdisplay[dispLine])
+                        self.lcd.write_string(strTemp[:20])
                 else:
-                    strTemp = '{} -Unknown type'.format(self.LCDdisplay[dispLine])
-                    self.lcd.write_string(strTemp[:20])
+                    self.lcd.write_string('Line Not Defined'.center(20))
 
     def tempUnitStr (self):
         if self.tempUnit == 2:
