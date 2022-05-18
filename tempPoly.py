@@ -175,13 +175,13 @@ class Controller(polyinterface.Controller):
                name = self.polyConfig['customParams'][currentSensor]
             else:
                 LOGGER.debug('Default Naming')
-                name = 'Sensor'+str(count)
-                self.polyConfig['customParams'][currentSensor] = name
-                self.addCustomParam({currentSensor: name})
+                #name = 'Sensor'+str(count)
+                #self.polyConfig['customParams'][currentSensor] = name
+                self.addCustomParam({currentSensor: None})
 
             if ('offset_'+currentSensor) in self.polyConfig['customParams']:
                 LOGGER.info('A customParams offset exist')
-                tComp = float(self.polyConfig['customParams']['tComp_'+currentSensor])
+                tComp = float(self.polyConfig['customParams']['offset_'+currentSensor])
             else:
                 LOGGER.debug('Creating Temp Offset param')
                 tComp = 0.0
