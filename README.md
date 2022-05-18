@@ -3,15 +3,26 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Panda88CO/UDI-RPITempSensors/LICENSE)
 
 This Poly provides an interface between [Raspberry Pi ](https://www.raspberrypi.org/documentation/usage/gpio-plus-and-raspi2/) DS18B20 temperature sensors and [Polyglot v2](https://github.com/UniversalDevicesInc/polyglot-v2) server.
+Supports a 4x20 LCD I2C display 
 
 ### Installation instructions
 Install from node server store 
 Use customer config to set default temp unit and names of probes
-Added support for offset for each probe - offset is specified in unit chosen 
+Supports for offset for each probe - offset is specified in unit chosen 
+Support for I2C 4x20 LCD display on RPi
+Display is somewhat configurable 
+Setting in Configuration  
+Check POLYGLOT_CONFIG.md file 
+
+If using displau - one must enableDisplay in configuration  (save config)
+Restart
+Configure display Parameter (save Config)
+Restart 
+
 
 ### Notes
 Sends a heartbeat back to ISY during shortpoll
-There is a bug preventing node name update.  To update erase node (click delete) in polyglot interface and restart.   
+There is a bug (polyglot v2?) preventing node name update.  To update erase node (click delete) in polyglot interface and restart.   
 
 Thanks and good luck.
 
