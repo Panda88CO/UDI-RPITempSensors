@@ -109,7 +109,7 @@ class Controller(polyinterface.Controller):
                     self.lcd.write_string(tempMinStr[:self.displayCol].center(self.displayCol))
                 elif self.LCDdisplayText[dispLine].upper() == 'TIME':
                     self.lcd.write_string(timeStr[:self.displayCol].center(self.displayCol))
-                elif self.LCDdisplayText[dispLine].upper == 'NONE' or self.LCDdisplayText[dispLine]== '':
+                elif self.LCDdisplayText[dispLine]== '':
                     self.lcd.cr()                       
                 else:
                     self.lcd.write_string(self.LCDdisplayText[dispLine][:self.displayCol].center(self.displayCol))
