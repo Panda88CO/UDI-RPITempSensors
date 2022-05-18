@@ -8,7 +8,7 @@
 > longPoll logs values for 24Hour Min/Max 
 
 # Use custom config parameters to name sensors in node server/ISY.  
-Sensors <sensorId> shows up with NoName when found - Name them to desired disply in ISY
+Sensors <sensorId> shows up with NoName when found - Name them to desired disply in ISY *This in needed to cxreate th sensor node 
 
 tempUnit: Specifies the temp unit (C,F,K) to be displayed (only uses first Char)
 ofset_<sensorId>: Probe temperature offset/compensation - specified using tempUnit
