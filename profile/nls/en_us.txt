@@ -1,7 +1,7 @@
 # Temp Sensor controller
 ND-controller-NAME = RPi Temp Controller
 ND-controller-ICON = TempSensor
-CMD-TEMP-DISCOVER-NAME = Update
+CMD-TEMP-DISCOVER-NAME = Update/Discover
 CMD-TEMP-TUNIT-NAME = Set Temp Unit
 
 ST-TEMP-GV0-NAME = NodeServer Status
