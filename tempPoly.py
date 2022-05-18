@@ -195,12 +195,10 @@ class Controller(polyinterface.Controller):
         if 'displayEnabled' in self.polyConfig['customParams']:
             temp = int(str(self.polyConfig['customParams']['displayEnabled']))
             self.LCDdisplayEn = (temp == 1) 
-            if self.LCDdisplayEn  and 'DisplaySensor' not in self.polyConfig['customParams']:
-                self.addNotice('Please restart and then configure display parameters')
-                self.stop()
         else:
             self.polyConfig['customParams']['displayEnabled'] = 0
             self.LCDdisplayEn = False
+            self.addNotice('To enable display set displayEnabled = 1 -  restart - then configure display parameters')
             self.addCustomParam({'displayEnabled': self.polyConfig['customParams']['displayEnabled'] })
 
         if self.LCDdisplayEn:
@@ -250,6 +248,7 @@ class Controller(polyinterface.Controller):
                     else:
                         self.LCDdisplayText[line] ='Input Text or Param'
                     self.addCustomParam({indexStr: self.LCDdisplayText[line]})
+                    LOGGER.debug('Add text lines {} - {}'.format(indexStr,self.LCDdisplayText[line] ))
 
         else:
             LOGGER.debug('No Display')
