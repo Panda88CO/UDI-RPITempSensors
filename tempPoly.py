@@ -270,7 +270,7 @@ class Controller(polyinterface.Controller):
             self.tempUnit = 0 #default to C
             self.addCustomParam({'tempUnit': 'Celcius'})
         self.setDriver('GV3', self.tempUnit, True, True)  
-        self.longPoll()
+        self.shortPoll()
 
 
     id = 'controller'
@@ -377,6 +377,7 @@ class TEMPsensor(polyinterface.Node):
     def updateTemp(self, command = None):
         LOGGER.debug('updateTemp {}'.format(self.sensorID))
         self.updateInfo()
+        self.parent.shortPoll()
 
 
     drivers = [{'driver': 'GV0', 'value': 0, 'uom': 4},
