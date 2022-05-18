@@ -24,6 +24,7 @@ class Controller(polyinterface.Controller):
         self.primary = self.address
         self.sensorList = []
         self.sensorListIndx = 0
+        self.LCDdisplay = {0:'TEMP', 1:'TEMPMIN', 2:'TEMPMAX', 3:'TIME'}
         self.hb = 0
         try:
             os.system('modprobe w1-gpio')
@@ -95,7 +96,6 @@ class Controller(polyinterface.Controller):
             for dispLine in range(0,4):
                 self.lcd.cursor_pos = (dispLine,0)   
                 if self.LCDdisplay[dispLine] == 'TEXT':
-
                     self.lcd.write_string(self.LCDdisplayText[:20].center(20))
                 elif self.LCDdisplay[dispLine] == 'TEMP':
                     self.lcd.write_string(tempStr[:20].center(20))
