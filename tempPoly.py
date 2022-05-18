@@ -24,8 +24,8 @@ class Controller(polyinterface.Controller):
         self.primary = self.address
         self.sensorList = []
         self.sensorListIndx = 0
-        self.LCDdisplay = {0:'TEMP', 1:'TEMPMIN', 2:'TEMPMAX', 3:'TIME'}
-        self.LCDdisplayText= {0:'Text Line 1', 1:'Text Line 2',2:'Text Line 3',3:'Text Line 4'}
+        self.displayTypes = ['TEMP', 'TEMPMAX', 'TEMPMIN', 'TIME']
+        self.LCDdisplayText= {0: 'Write text or', 1:'use TEMP, TEMPMAX', 2:'TEMPMIN or TIME',3:' to display values'}
         self.hb = 0
         self.displayRow = 4
         self.displayCol = 20
@@ -98,24 +98,21 @@ class Controller(polyinterface.Controller):
             for dispLine in range(0,self.displayRow):
                 self.lcd.cursor_pos = (dispLine,0) 
                 LOGGER.debug( 'row {}  lcdDisplay {}'.format(dispLine, self.LCDdisplay))
-                if dispLine in self.LCDdisplay:  
-                    if self.LCDdisplay[dispLine] == 'TEXT':
-                        self.lcd.write_string(self.LCDdisplayText[dispLine][:self.displayCol].center(self.displayCol))
-                    elif self.LCDdisplay[dispLine] == 'TEMP':
-                        self.lcd.write_string(tempStr[:self.displayCol].center(self.displayCol))
-                    elif self.LCDdisplay[dispLine] == 'TEMPMAX':
-                        self.lcd.write_string(tempMaxStr[:self.displayCol].center(self.displayCol))
-                    elif self.LCDdisplay[dispLine] == 'TEMPMIN':
-                        self.lcd.write_string(tempMinStr[:self.displayCol].center(self.displayCol))
-                    elif self.LCDdisplay[dispLine] == 'TIME':
-                        self.lcd.write_string(timeStr[:self.displayCol].center(self.displayCol))
-                    elif self.LCDdisplay[dispLine] == 'NONE':
-                        self.lcd.cr()                       
-                    else:
-                        strTemp = '{} -Unknown type'.format(self.LCDdisplay[dispLine])
-                        self.lcd.write_string(strTemp[:self.displayCol])
+                #if dispLine in self.displayTypes:  
+                if self.LCDdisplayText[dispLine].upper() == 'TEMP':
+                    self.lcd.write_string(tempStr[:self.displayCol].center(self.displayCol))
+                elif self.LCDdisplayText[dispLine].upper() == 'TEMPMAX':
+                    self.lcd.write_string(tempMaxStr[:self.displayCol].center(self.displayCol))
+                elif self.LCDdisplayText[dispLine].upper() == 'TEMPMIN':
+                    self.lcd.write_string(tempMinStr[:self.displayCol].center(self.displayCol))
+                elif self.LCDdisplayText[dispLine].upper() == 'TIME':
+                    self.lcd.write_string(timeStr[:self.displayCol].center(self.displayCol))
+                elif self.LCDdisplayText[dispLine].upper == 'NONE' or self.LCDdisplayText[dispLine]== '':
+                    self.lcd.cr()                       
                 else:
-                    self.lcd.write_string('Line Not Defined'.center(self.displayCol))
+                    self.lcd.write_string(self.LCDdisplayText[dispLine][:self.displayCol].center(self.displayCol))
+                #else:
+                #    self.lcd.write_string('Line Not Defined'.center(self.displayCol))
 
     def tempUnitStr (self):
         if self.tempUnit == 2:
@@ -202,7 +199,7 @@ class Controller(polyinterface.Controller):
             self.addCustomParam({'displayEnabled': self.polyConfig['customParams']['displayEnabled'] })
 
         if self.LCDdisplayEn:
-            displayTypes = ['TEXT','TEMP', 'TEMPMAX', 'TEMPMIN', 'TIME', 'NONE']
+            
             self.LCDdisplay = {}
             self.lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1, cols=self.displayCol, rows=self.displayRow, dotsize=8, charmap='A02', auto_linebreaks=True)
             self.lcd.clear()
@@ -264,7 +261,7 @@ class Controller(polyinterface.Controller):
                 self.addCustomParam({'displayText4': self.LCDdisplayText[3]})
 
 
-
+            '''
             if 'displayType1' in self.polyConfig['customParams']:
                 tempLine = self.polyConfig['customParams']['displayType1']
                 if tempLine.upper() in displayTypes:
@@ -296,7 +293,7 @@ class Controller(polyinterface.Controller):
             else:
                 self.polyConfig['customParams']['displayType4'] =  self.LCDdisplay[3]
                 self.addCustomParam({'displayType4': self.LCDdisplay[3]})
-
+            '''
             
 
 
