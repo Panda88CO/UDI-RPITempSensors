@@ -263,12 +263,13 @@ class Controller(polyinterface.Controller):
                 self.polyConfig['customParams']['displayText4'] =  self.LCDdisplayText[3]
                 self.addCustomParam({'displayText4': self.LCDdisplayText[3]})
 
+
+
             if 'displayType1' in self.polyConfig['customParams']:
                 tempLine = self.polyConfig['customParams']['displayType1']
                 if tempLine.upper() in displayTypes:
                     self.LCDdisplay[0] = tempLine.upper()
             else:
-                self.LCDdisplay[0] = 'TEMP'
                 self.polyConfig['customParams']['displayType1'] =  self.LCDdisplay[0]
                 self.addCustomParam({'displayType1': self.LCDdisplay[0]})
           
@@ -277,7 +278,6 @@ class Controller(polyinterface.Controller):
                 if tempLine.upper() in displayTypes:
                     self.LCDdisplay[1] = tempLine.upper()
             else:
-                self.LCDdisplay[1] = 'TEMPMIN'
                 self.polyConfig['customParams']['displayType2'] =  self.LCDdisplay[1]
                 self.addCustomParam({'displayType2': self.LCDdisplay[1]})     
 
@@ -286,7 +286,6 @@ class Controller(polyinterface.Controller):
                 if tempLine.upper() in displayTypes:
                     self.LCDdisplay[2] = tempLine.upper()
             else:
-                self.LCDdisplay[2] = 'TEMPMAX'
                 self.polyConfig['customParams']['displayType3'] =  self.LCDdisplay[2]
                 self.addCustomParam({'displayType3': self.LCDdisplay[2]})
 
@@ -295,9 +294,8 @@ class Controller(polyinterface.Controller):
                 if tempLine.upper() in displayTypes:
                     self.LCDdisplay[3] = tempLine.upper()
             else:
-                self.LCDdisplay[3] = 'TIME'
                 self.polyConfig['customParams']['displayType4'] =  self.LCDdisplay[3]
-                self.addCustomParam({'displayType3': self.LCDdisplay[3]})
+                self.addCustomParam({'displayType4': self.LCDdisplay[3]})
 
             
 
