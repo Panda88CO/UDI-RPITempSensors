@@ -10,18 +10,19 @@ Install from node server store
 Use customer config to set default temp unit and names of probes
 Supports for offset for each probe - offset is specified in unit chosen 
 Support for I2C 4x20 LCD display on RPi
-Display is somewhat configurable 
+Display is somewhat configurable (using displayCol and displayRow)
 Setting in Configuration  
 Check POLYGLOT_CONFIG.md file 
 
-If using displau - one must enableDisplay in configuration  (save config)
+If using display - one must enableDisplay in configuration (set t0 1 and then save config)
 Restart
 Configure display Parameter (save Config)
 Restart 
 
 
 ### Notes
-Sends a heartbeat back to ISY during shortpoll
+shortPoll updates temperature, min/max, and display
+LongPoll sends a heartbeat back to ISY
 There is a bug (polyglot v2?) preventing node name update.  To update erase node (click delete) in polyglot interface and restart.   
 
 Thanks and good luck.

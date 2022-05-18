@@ -4,9 +4,8 @@
 (Only tested with 2 sensors this far)
 > Sensors can be bought on Amazon or similar - search for DS18B20 - remember 4.7K resistor is usually not included, but some kit do - also one need to connect to the RPI header 
 
-> shortPoll updates temperature and - sends heartBeast and updated display
-> longPoll logs values for 24Hour Min/Max 
-
+> shortPoll updates temperature,  sends heartBeast, updates 24Hour Min/Max, and updates display
+> longPoll not used
 # Use custom config parameters to name sensors in node server/ISY.  
 Sensors <sensorId> shows up with NoName when found - Name them to desired disply in ISY *This in needed to cxreate th sensor node 
 
@@ -18,25 +17,24 @@ DisplpaySensor: MULTISENSORS specifies rolling display (updated every shortPoll)
                 SensorName(seea above) specifies only that specific sensor to be displayed 
                 It is ok to specify MULTISENSORS with only 1 sensor
 
-displayType1-4 : Specifies what is displayed on each line: 
+displayText1-4 : Specifies what is displayed on each line: 
     Options are:
-        TEMP : Sensors Temperature
+        TEMP : Sensor and  Temperature
         TEMPMIN: Min temp last 24Hours
         TEMPMAX: Max temp last 24Hours  
-        TIME: Latest Time of measurement
-        TEXT: Test in line correspondig to displayText 1-4
-        NONE: Blank Line
-displayText1-4: Max 20 character text strings to be displayed in text line 1-4
+        TIME: Time of last measurement
+        NONE: Empty line 
+        Everything else will be displayed as text 
 
 
-
-
+"displayCol" and "displayRow" can be used to specify a display with differnt number or rows/columns
+Display must be RPLCD and I2C compatible  - Not tested 
 
 
 
 > Uses W1ThemSensor library - more info can be found there <https://github.com/timofurrer/w1thermsensor>
 
-Added a heat beat function toggling with SHORT POll - ISY can be used to detect this and know if connection is lost 
+Added a heart beat function toggling with SHORT POll - ISY can be used to detect this and know if connection is lost 
 
 #### For more information:
 - <https://www.raspberrypi.org/documentation/usage/gpio/>

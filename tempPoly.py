@@ -60,9 +60,10 @@ class Controller(polyinterface.Controller):
 
     def shortPoll(self):
         LOGGER.debug('shortPoll')
-        self.heartbeat()
+        
         for node in self.nodes:
             self.nodes[node].updateInfo()
+            self.nodes[node].update24Hqueue()
 
         if self.LCDdisplayEn:   
             if self.DisplaySensor == 'MULTISENSORS':
@@ -83,15 +84,14 @@ class Controller(polyinterface.Controller):
        
     def longPoll(self):
         LOGGER.debug('longPoll')
+        self.heartbeat()
         #LOGGER.debug(self.nodes)
         #self.nodes = self.poly.getNodes()
-        for node in self.nodes:
-            self.nodes[node].updateInfo()
-            self.nodes[node].update24Hqueue()
+        pass
 
     def lcdUpdate(self, node):
             self.lcd.clear()
-            tempStr = '{}: {}{}'.format( self.nodes[node].name[:13], str(self.nodes[node].tempDisplay), self.tempUnitStr())
+            tempStr = '{}: {}{}'.format( self.nodes[node].name[:(self.displayCol - 7)], str(self.nodes[node].tempDisplay), self.tempUnitStr())
             tempMinStr = 'Min Temp: {}{}'.format(self.nodes[node].tempDisplayMin,self.tempUnitStr())
             tempMaxStr = 'Max Temp: {}{}'.format(self.nodes[node].tempDisplayMax,self.tempUnitStr()) 
             timeStr = self.nodes[node].currentTime.strftime("%m/%d/%y %H:%M").center(self.displayCol)
@@ -203,7 +203,7 @@ class Controller(polyinterface.Controller):
             self.LCDdisplay = {}
             self.lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1, cols=self.displayCol, rows=self.displayRow, dotsize=8, charmap='A02', auto_linebreaks=True)
             self.lcd.clear()
-            self.lcd.cursor_pos = (1,0)    
+            self.lcd.cursor_pos = (0,0)    
             self.lcd.write_string( 'UDI-RPiTempSensors'.center(self.displayCol))
             LOGGER.info('LCD display added')
             
@@ -230,72 +230,21 @@ class Controller(polyinterface.Controller):
                 self.addCustomParam({'DisplaySensor': self.DisplaySensor })
                 
             if 'displayRow' in self.polyConfig['customParams']:
-                self.displayRow = self.polyConfig['customParams']['displayRow']
+                self.displayRow = int(self.polyConfig['customParams']['displayRow'])
 
             if 'displayCol' in self.polyConfig['customParams']:
-                self.displayCol = self.polyConfig['customParams']['displayCol']
+                self.displayCol = int(self.polyConfig['customParams']['displayCol'])
 
-
-            if 'displayText1' in self.polyConfig['customParams']:
-                self.LCDdisplayText[0] = self.polyConfig['customParams']['displayText1']
-            else:
-                self.polyConfig['customParams']['displayText1'] =  self.LCDdisplayText[0]
-                self.addCustomParam({'displayText1': self.LCDdisplayText[0]})
-
-            if 'displayText2' in self.polyConfig['customParams']:
-                self.LCDdisplayText[1] = self.polyConfig['customParams']['displayText2']
-            else:
-                self.polyConfig['customParams']['displayText2'] =  self.LCDdisplayText[1]
-                self.addCustomParam({'displayText2': self.LCDdisplayText[1]})
-
-            if 'displayText3' in self.polyConfig['customParams']:
-                self.LCDdisplayText[2] = self.polyConfig['customParams']['displayText3']
-            else:
-                self.polyConfig['customParams']['displayText3'] =  self.LCDdisplayText[2]
-                self.addCustomParam({'displayText3': self.LCDdisplayText[2]})
-
-            if 'displayText4' in self.polyConfig['customParams']:
-                self.LCDdisplayText[3] = self.polyConfig['customParams']['displayText4']
-            else:
-                self.polyConfig['customParams']['displayText4'] =  self.LCDdisplayText[3]
-                self.addCustomParam({'displayText4': self.LCDdisplayText[3]})
-
-
-            '''
-            if 'displayType1' in self.polyConfig['customParams']:
-                tempLine = self.polyConfig['customParams']['displayType1']
-                if tempLine.upper() in displayTypes:
-                    self.LCDdisplay[0] = tempLine.upper()
-            else:
-                self.polyConfig['customParams']['displayType1'] =  self.LCDdisplay[0]
-                self.addCustomParam({'displayType1': self.LCDdisplay[0]})
-          
-            if 'displayType2' in self.polyConfig['customParams']:
-                tempLine = self.polyConfig['customParams']['displayType2']
-                if tempLine.upper() in displayTypes:
-                    self.LCDdisplay[1] = tempLine.upper()
-            else:
-                self.polyConfig['customParams']['displayType2'] =  self.LCDdisplay[1]
-                self.addCustomParam({'displayType2': self.LCDdisplay[1]})     
-
-            if 'displayType3' in self.polyConfig['customParams']:
-                tempLine = self.polyConfig['customParams']['displayType3']
-                if tempLine.upper() in displayTypes:
-                    self.LCDdisplay[2] = tempLine.upper()
-            else:
-                self.polyConfig['customParams']['displayType3'] =  self.LCDdisplay[2]
-                self.addCustomParam({'displayType3': self.LCDdisplay[2]})
-
-            if 'displayType4' in self.polyConfig['customParams']:
-                tempLine = self.polyConfig['customParams']['displayType4']
-                if tempLine.upper() in displayTypes:
-                    self.LCDdisplay[3] = tempLine.upper()
-            else:
-                self.polyConfig['customParams']['displayType4'] =  self.LCDdisplay[3]
-                self.addCustomParam({'displayType4': self.LCDdisplay[3]})
-            '''
-            
-
+            for line in range(0,self.displayRow):
+                indexStr = 'displayText'+str(line+1)
+                if indexStr in self.polyConfig['customParams']:
+                    self.LCDdisplayText[line] = self.polyConfig['customParams'][indexStr]
+                else:
+                    if line in self.LCDdisplayText:
+                        self.polyConfig['customParams'][indexStr] =  self.LCDdisplayText[line]
+                    else:
+                        self.LCDdisplayText[line] ='Input Text or Param'
+                    self.addCustomParam({indexStr: self.LCDdisplayText[line]})
 
         else:
             LOGGER.debug('No Display')
