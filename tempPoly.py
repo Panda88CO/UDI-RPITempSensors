@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from site import addusersitepackages
 import polyinterface
 import sys
 import os
@@ -9,18 +10,20 @@ import os
 import logging
 from subprocess import call
 from w1thermsensor import W1ThermSensor, Sensor, Unit
-
+from RPLCD.i2c import CharLCD
 
 LOGGER = polyinterface.LOGGER
 
 class Controller(polyinterface.Controller):
     def __init__(self, polyglot):
         super().__init__(polyglot)
-        LOGGER.setLevel(logging.INFO)
+        LOGGER.setLevel(logging.DEBUG)
         LOGGER.info('_init_')
         self.name = 'Rpi Temp Sensors'
         self.address = 'controller'
         self.primary = self.address
+        self.sensorList = []
+        self.sensorListIndx = 0
         self.hb = 0
         try:
             os.system('modprobe w1-gpio')
@@ -33,6 +36,7 @@ class Controller(polyinterface.Controller):
 
     def start(self):
         LOGGER.debug('start - Temp Sensor controller')
+        self.removeNoticesAll()
         try:
             self.discover()
             self.setDriver('GV0', 1)
@@ -53,12 +57,66 @@ class Controller(polyinterface.Controller):
         self.heartbeat()
         for node in self.nodes:
             self.nodes[node].updateInfo()
+
+        if self.LCDdisplayEn:
+            #LOGGER.debug(self.sensorList)
+            #LOGGER.debug(self.sensorListIndx)          
+            if self.DisplaySensor == 'MULTISENSORS':
+                adr = self.sensorList[self.sensorListIndx]
+                for node in self.nodes:
+                    if adr == self.nodes[node].address:
+                       self.lcdUpdate (node) 
+                self.sensorListIndx = self.sensorListIndx + 1
+                if self.sensorListIndx >= len(self.sensorList):
+                    self.sensorListIndx = 0
+                
+            else:
+                name = self.DisplaySensor
+                for node in self.nodes:
+                    if name == self.nodes[node].name:
+                        self.lcdUpdate (node)
+
+
             
     def longPoll(self):
         LOGGER.debug('longPoll')
+        #LOGGER.debug(self.nodes)
+        #self.nodes = self.poly.getNodes()
         for node in self.nodes:
             self.nodes[node].updateInfo()
             self.nodes[node].update24Hqueue()
+
+    def lcdUpdate(self, node):
+            self.lcd.clear()
+            tempStr = '{}{} - {}'.format(str(self.nodes[node].tempDisplay), self.tempUnitStr(),  self.nodes[node].name)
+            tempMinStr = 'Min Temp: {}{}'.format(self.nodes[node].tempDisplayMin,self.tempUnitStr())
+            tempMaxStr = 'Max Temp: {}{}'.format(self.nodes[node].tempDisplayMax,self.tempUnitStr()) 
+            timeStr = self.nodes[node].currentTime.strftime("%m/%d/%y %H:%M").center(20)
+            for dispLine in range(0,4):
+                self.lcd.cursor_pos = (dispLine,0)   
+                if self.LCDdisplay[dispLine] == 'TEXT':
+
+                    self.lcd.write_string(self.LCDdisplayText[:20].center(20))
+                elif self.LCDdisplay[dispLine] == 'TEMP':
+                    self.lcd.write_string(tempStr[:20].center(20))
+                elif self.LCDdisplay[dispLine] == 'TEMPMAX':
+                    self.lcd.write_string(tempMaxStr[:20].center(20))
+                elif self.LCDdisplay[dispLine] == 'TEMPMIN':
+                    self.lcd.write_string(tempMinStr[:20].center(20))
+                elif self.LCDdisplay[dispLine] == 'TIME':
+                    self.lcd.write_string(timeStr[:20].center(20))
+                else:
+                    strTemp = '{} -Unknown type'.format(self.LCDdisplay[dispLine])
+                    self.lcd.write_string(strTemp[:20])
+
+    def tempUnitStr (self):
+        if self.tempUnit == 2:
+            unit = 'K'
+        elif self.tempUnit == 1:
+            unit = 'F'
+        else:
+            unit = 'C'
+        return(unit)
 
     def update24Hqueue (self):
          LOGGER.debug('Update24H queue')
@@ -124,6 +182,95 @@ class Controller(polyinterface.Controller):
 
             LOGGER.debug('Addning node {}, {}, {}'.format(address, name, currentSensor))
             self.addNode(TEMPsensor(self, self.address, address, name, currentSensor, tComp), True)
+            self.sensorList.append(address)
+        if 'displayEnabled' in self.polyConfig['customParams']:
+            temp = int(str(self.polyConfig['customParams']['displayEnabled']))
+            self.LCDdisplayEn = (temp == 1) 
+        else:
+            self.polyConfig['customParams']['displayEnabled'] = 0
+            self.LCDdisplayEn = False
+            self.addCustomParam({'displayEnabled': self.polyConfig['customParams']['displayEnabled'] })
+
+        if self.LCDdisplayEn:
+            displayTypes = ['TEXT', 'TEMP', 'TEMPMAX', 'TEMPMIN', 'TIME']
+            self.LCDdisplay = {}
+            self.lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1, cols=20, rows=4, dotsize=8, charmap='A02', auto_linebreaks=True)
+            self.lcd.clear()
+            self.lcd.cursor_pos = (1,0)    
+            self.lcd.write_string( 'UDI-RPiTempSensors'.center(20))
+            LOGGER.debug('LCD display added')
+            
+            if 'DisplaySensor' in self.polyConfig['customParams']:
+                tempNode = self.polyConfig['customParams']['DisplaySensor']
+                if tempNode.upper() == 'MULTISENSORS':
+                    self.multiSensors = True
+                    self.DisplaySensor = 'MULTISENSORS'
+
+                else:
+                    found = False
+                    for node in self.nodes:
+                        if self.nodes[node].name.upper() == tempNode.upper():
+                            self.multSensors = False
+                            found = True
+                            self.DisplaySensor = tempNode
+                        LOGGER.debug('{} == {}'.format(self.nodes[node].name.upper(), tempNode.upper()) )
+                    if not found:
+                        self.addNotice('Unknown sensor specified: {}'.format(tempNode))
+                        self.DisplaySensor = 'MULTISENSORS' 
+            else:           
+                self.DisplaySensor = 'MULTISENSORS'
+                self.polyConfig['customParams']['DisplaySensor'] = self.DisplaySensor
+                self.addCustomParam({'DisplaySensor': self.DisplaySensor })
+                
+
+            if 'displayText' in self.polyConfig['customParams']:
+                self.LCDdisplayText = self.polyConfig['customParams']['displayText']
+            else:
+                self.LCDdisplayText = 'Specify Text'
+                self.polyConfig['customParams']['displayText'] =  self.LCDdisplayText
+                self.addCustomParam({'displayText': self.LCDdisplayText})
+
+            if 'displayLine0' in self.polyConfig['customParams']:
+                tempLine = self.polyConfig['customParams']['displayLine0']
+                if tempLine.upper() in displayTypes:
+                    self.LCDdisplay[0] = tempLine.upper()
+            else:
+                self.LCDdisplay[0] = 'TEXT'
+                self.polyConfig['customParams']['displayLine0'] =  self.LCDdisplay[0]
+                self.addCustomParam({'displayLine0': self.LCDdisplay[0]})
+          
+            if 'displayLine1' in self.polyConfig['customParams']:
+                tempLine = self.polyConfig['customParams']['displayLine1']
+                if tempLine.upper() in displayTypes:
+                    self.LCDdisplay[1] = tempLine.upper()
+            else:
+                self.LCDdisplay[1] = 'tempLine'
+                self.polyConfig['customParams']['displayLine1'] =  self.LCDdisplay[1]
+                self.addCustomParam({'displayLine1': self.LCDdisplay[1]})     
+
+            if 'displayLine2' in self.polyConfig['customParams']:
+                tempLine = self.polyConfig['customParams']['displayLine2']
+                if tempLine.upper() in displayTypes:
+                    self.LCDdisplay[2] = tempLine.upper()
+            else:
+                self.LCDdisplay[2] = 'TEMPMIN'
+                self.polyConfig['customParams']['displayLine2'] =  self.LCDdisplay[2]
+                self.addCustomParam({'displayLine2': self.LCDdisplay[2]})
+
+            if 'displayLine3' in self.polyConfig['customParams']:
+                tempLine = self.polyConfig['customParams']['displayLine3']
+                if tempLine.upper() in displayTypes:
+                    self.LCDdisplay[3] = tempLine.upper()
+            else:
+                self.LCDdisplay[3] = 'TIME'
+                self.polyConfig['customParams']['displayLine3'] =  self.LCDdisplay[3]
+                self.addCustomParam({'displayLine3': self.LCDdisplay[3]})
+
+            
+
+
+        else:
+            LOGGER.debug('No Display')
     
         self.reportDrivers()
 
@@ -167,6 +314,9 @@ class TEMPsensor(polyinterface.Node):
         self.tempC = self.sensor.get_temperature(Unit.DEGREES_C)
         self.tempMinC24H = self.tempC
         self.tempMaxC24H = self.tempC
+        self.tempDisplay = self.tempC
+        self.tempDisplayMin = self.tempC
+        self.tempDisplayMax = self.tempC
         self.tempMinC24HUpdated = False
         self.tempMaxC24HUpdated = False
         self.currentTime = datetime.datetime.now()
@@ -211,17 +361,27 @@ class TEMPsensor(polyinterface.Node):
         self.currentTime = datetime.datetime.now()
         
         if  self.parent.tempUnit == 2:
-            self.setDriver('GV0', round(float(self.tempC+273.15+self.tempComp),1), True, True, 26)
-            self.setDriver('GV1', round(float(self.tempMinC24H+273.15+self.tempComp),1), True, True, 26)
-            self.setDriver('GV2', round(float(self.tempMaxC24H+273.15+self.tempComp),1), True, True, 26)
+            self.tempDisplay = self.tempC+273.15+self.tempComp
+            self.tempDisplayMin = self.tempMinC24H+273.15+self.tempComp
+            self.tempDisplayMax = self.tempMaxC24H+273.15+self.tempComp
+            self.setDriver('GV0', round(self.tempDisplay,1), True, True, 26)
+            self.setDriver('GV1', round(self.tempDisplayMin,1), True, True, 26)
+            self.setDriver('GV2', round( self.tempDisplayMax ,1), True, True, 26)
         elif self.parent.tempUnit == 1:
-            self.setDriver('GV0', round(float(self.tempC*9/5+32+self.tempComp),1), True, True, 17)
-            self.setDriver('GV1', round(float(self.tempMinC24H*9/5+32+self.tempComp),1), True, True, 17)
-            self.setDriver('GV2', round(float(self.tempMaxC24H*9/5+32+self.tempComp),1), True, True, 17)
+            self.tempDisplay = round(self.tempC*9/5+32+self.tempComp,1)
+            self.tempDisplayMin = round(self.tempMinC24H*9/5+32+self.tempComp,1)
+            self.tempDisplayMax = round(self.tempMaxC24H*9/5+32+self.tempComp,1)
+            self.setDriver('GV0', round(self.tempDisplay,1), True, True, 17)
+            self.setDriver('GV1', round(self.tempDisplayMin,1), True, True, 17)
+            self.setDriver('GV2', round( self.tempDisplayMax ,1), True, True, 17)
+  
         else:
-            self.setDriver('GV0', round(float(self.tempC+self.tempComp),1), True, True, 4)
-            self.setDriver('GV1', round(float(self.tempMinC24H+self.tempComp),1), True, True, 4)
-            self.setDriver('GV2', round(float(self.tempMaxC24H+self.tempComp),1), True, True, 4)
+            self.tempDisplay = round(self.tempC+self.tempComp,1)
+            self.tempDisplayMin = round(self.tempMinC24H+self.tempComp,1)
+            self.tempDisplayMax = round(self.tempMaxC24H+self.tempComp,1)     
+            self.setDriver('GV0', round(self.tempDisplay,1), True, True, 4)
+            self.setDriver('GV1', round(self.tempDisplayMin,1), True, True, 4)
+            self.setDriver('GV2', round( self.tempDisplayMax ,1), True, True, 4)
 
         self.setDriver('GV6', int(self.currentTime.strftime("%m")))
         self.setDriver('GV7', int(self.currentTime.strftime("%d")))
