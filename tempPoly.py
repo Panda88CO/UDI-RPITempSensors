@@ -26,7 +26,7 @@ class Controller(polyinterface.Controller):
         self.sensorListIndx = 0
         self.displayTypes = ['TEMP', 'TEMPMAX', 'TEMPMIN', 'TIME']
         self.LCDdisplayConfig= {0: 'displayText1:Txt/VAL', 1:'displayText2:Txt/VAL', 2:'displayText3:Txt/VAL',3:'displayText4:Txt/VAL'}
-        self.displayContents = self.LCDdisplayConfig
+        self.displayContents = {0: 'displayText1:Txt/VAL', 1:'displayText2:Txt/VAL', 2:'displayText3:Txt/VAL',3:'displayText4:Txt/VAL'}
         self.dateTimeConfig = '%m/%d/%y %H:%M'
         self.hb = 0
         self.displayRow = 4
@@ -102,50 +102,32 @@ class Controller(polyinterface.Controller):
         tempMaxStr = str('Max Temp: {}{}'.format(self.nodes[node].tempDisplayMax,self.tempUnitStr())[:self.displayCol])
         timeStr = str(self.nodes[node].currentTime.strftime(self.dateTimeConfig).center(self.displayCol)[:self.displayCol])
 
-        LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
 
         for dispLine in range(0,self.displayRow):
             self.lcd.cursor_pos = (dispLine,0) 
-            LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
-            #LOGGER.info( 'row {}  lcdDisplay {}  config {}'.format(dispLine, self.LCDdisplay, self.LCDdisplayConfig[dispLine].upper()))
-            #if dispLine in self.displayTypes:  
             if self.LCDdisplayConfig[dispLine].upper() == 'TEMP':
-                LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
-                LOGGER.info('{} = {} {}'.format(self.displayContents[dispLine],tempStr, (str(self.displayContents[dispLine]) != tempStr)  ))
                 if self.displayContents[dispLine] != tempStr:
                     self.lcd.write_string(tempStr.center(self.displayCol))
                     self.displayContents[dispLine] = tempStr
             elif self.LCDdisplayConfig[dispLine].upper() == 'TEMPMAX':
-                LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
-                LOGGER.info('{} = {} {}'.format(self.displayContents[dispLine],tempMaxStr, (str(self.displayContents[dispLine]) != tempMaxStr )))
                 if self.displayContents[dispLine] != tempMaxStr:
                     self.lcd.write_string(tempMaxStr.center(self.displayCol))
                     self.displayContents[dispLine] = tempMaxStr
             elif self.LCDdisplayConfig[dispLine].upper() == 'TEMPMIN':
-                LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
-                LOGGER.info('{} = {} {}'.format(self.displayContents[dispLine],tempMinStr, (str(self.displayContents[dispLine]) != tempMinStr)  ))
                 if self.displayContents[dispLine] != tempMinStr:
                     self.lcd.write_string(tempMinStr.center(self.displayCol))
                     self.displayContents[dispLine] = tempMinStr
             elif self.LCDdisplayConfig[dispLine].upper() == 'TIME':
-                LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
-                LOGGER.info('{} = {} {}'.format(self.displayContents[dispLine],timeStr, type(self.displayContents[dispLine])))
                 if self.displayContents[dispLine] != timeStr:
                     self.lcd.write_string(timeStr.center(self.displayCol))
                     self.displayContents[dispLine] = timeStr
-
             elif self.LCDdisplayConfig[dispLine]== '':
-                LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
                 self.lcd.cr()                       
             else:
-                LOGGER.info('lcdUpdate: {}  {}  {}  {}'.format(tempStr, tempMinStr, tempMaxStr, timeStr ))
                 dispTEXT = self.LCDdisplayConfig[dispLine][:self.displayCol].center(self.displayCol)
-                LOGGER.info('{} :{}'.format(self.displayContents[dispLine], dispTEXT))
                 if self.displayContents[dispLine] != dispTEXT:
                     self.lcd.write_string(dispTEXT.center(self.displayCol))
                     self.displayContents[dispLine] = dispTEXT
-            #else:
-            #    self.lcd.write_string('Line Not Defined'.center(self.displayCol))
 
     def tempUnitStr (self):
         if self.tempUnit == 2:

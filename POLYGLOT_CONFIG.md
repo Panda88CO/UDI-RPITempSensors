@@ -31,7 +31,7 @@ Display must be RPLCD and I2C compatible  - Not tested
 
 To redefine TIME presentation add "dateTimeConfig" key to Configurations
 Default is %m/%d/%y %H:%M  
-Say one wants weekday and use Am/PM to be shown one could change to %a %m/%d/%y %I:%M%p
+Say one wants weekday and use AM/PM to be shown one could change to %a %m/%d/%y %I:%M%p
 Keep in mint the limitation of number of characters (20 default)
 Remember to save config after adding parameter
 Check more of options at bottom of https://www.w3schools.com/python/python_datetime.asp
