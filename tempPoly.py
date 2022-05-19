@@ -25,7 +25,7 @@ class Controller(polyinterface.Controller):
         self.sensorList = []
         self.sensorListIndx = 0
         self.displayTypes = ['TEMP', 'TEMPMAX', 'TEMPMIN', 'TIME']
-        self.LCDdisplayText= {0: 'Write text or', 1:'use TEMP, TEMPMAX', 2:'TEMPMIN or TIME',3:' to display values'}
+        self.LCDdisplayText= {0: 'displayText1:Txt/VAL', 1:'displayText2:Txt/VAL', 2:'displayText3:Txt/VAL',3:'displayText4:Txt/VAL'}
         self.hb = 0
         self.displayRow = 4
         self.displayCol = 20
