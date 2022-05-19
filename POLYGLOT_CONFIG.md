@@ -14,15 +14,15 @@ ofset_<sensorId>: Probe temperature offset/compensation - specified using tempUn
 
 displayEnabled: 1 - display enabled, 0 - display diabled
 DisplpaySensor: MULTISENSORS specifies rolling display (updated every shortPoll) between multiple Sensors
-                SensorName(seea above) specifies only that specific sensor to be displayed 
-                It is ok to specify MULTISENSORS with only 1 sensor
+    - SensorName(seea above) specifies only that specific sensor to be displayed 
+    - It is ok to specify MULTISENSORS with only 1 sensor
 
 displayText1-4 : Specifies what is displayed on each line: 
     Options are:
-        TEMP : Sensor and  Temperature
-        TEMPMIN: Min temp last 24Hours
-        TEMPMAX: Max temp last 24Hours  
-        TIME: Time of last measurement
+        - TEMP : Sensor and  Temperature
+        - TEMPMIN: Min temp last 24Hours
+        - TEMPMAX: Max temp last 24Hours  
+        - TIME: Time of last measurement
         Everything else will be displayed as text 
 
 
@@ -31,10 +31,10 @@ Display must be RPLCD and I2C compatible  - Not tested
 
 To redefine TIME presentation add "dateTimeConfig" key to Configurations
 Default is %m/%d/%y %H:%M  
-Say one wants weekday and use AM/PM to be shown one could change to %a %m/%d/%y %I:%M%p
-Keep in mint the limitation of number of characters (20 default)
+If one wants weekday and use AM/PM to be shown one could change to %a %m/%d/%y %I:%M%p
+Keep in mind the limitation of number of characters (20 default)
 Remember to save config after adding parameter
-Check more of options at bottom of https://www.w3schools.com/python/python_datetime.asp
+Check more of display options at bottom of <https://www.w3schools.com/python/python_datetime.asp>
 
 > Uses W1ThemSensor library - more info can be found there <https://github.com/timofurrer/w1thermsensor>
 
