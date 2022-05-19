@@ -23,14 +23,18 @@ displayText1-4 : Specifies what is displayed on each line:
         TEMPMIN: Min temp last 24Hours
         TEMPMAX: Max temp last 24Hours  
         TIME: Time of last measurement
-        NONE: Empty line 
         Everything else will be displayed as text 
 
 
 "displayCol" and "displayRow" can be used to specify a display with differnt number or rows/columns
 Display must be RPLCD and I2C compatible  - Not tested 
 
-
+To redefine TIME presentation add "dateTimeConfig" key to Configurations
+Default is %m/%d/%y %H:%M  
+Say one wants weekday and use Am/PM to be shown one could change to %a %m/%d/%y %I:%M%p
+Keep in mint the limitation of number of characters (20 default)
+Remember to save config after adding parameter
+Check more of options at bottom of https://www.w3schools.com/python/python_datetime.asp
 
 > Uses W1ThemSensor library - more info can be found there <https://github.com/timofurrer/w1thermsensor>
 
