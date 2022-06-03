@@ -22,7 +22,7 @@ Restart
 
 ### Notes
 shortPoll updates temperature, min/max, and display
-LongPoll sends a heartbeat back to ISY
+LongPoll sends a heartbeat back to ISY (node toggles state between ON and OFF )
 There is a bug (polyglot v2?) preventing node name update.  To update erase node (click delete) in polyglot interface and restart.   
 
 Thanks and good luck.

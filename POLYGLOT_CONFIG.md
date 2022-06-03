@@ -20,9 +20,11 @@ DisplpaySensor: MULTISENSORS specifies rolling display (updated every shortPoll)
 displayText1-4 : Specifies what is displayed on each line: 
     Options are:
         - TEMP : Sensor and  Temperature
-        - TEMPMIN: Min temp last 24Hours
-        - TEMPMAX: Max temp last 24Hours  
-        - TIME: Time of last measurement
+        - TEMPMIN: Min temp last 24 hours
+        - TEMPMAX: Max temp last 24 hours  
+        - TEMPMINMAX: Min and Max temp last 24 hours
+        - DATETIME: Date and Time of last measurement
+
         Everything else will be displayed as text 
 
 
@@ -38,7 +40,7 @@ Check more of display options at bottom of <https://www.w3schools.com/python/pyt
 
 > Uses W1ThemSensor library - more info can be found there <https://github.com/timofurrer/w1thermsensor>
 
-Added a heart beat function toggling with SHORT POll - ISY can be used to detect this and know if connection is lost 
+Added a heart beat function toggling with SHORT POLL - ISY can be used to detect this and know if connection is lost 
 
 #### For more information:
 - <https://www.raspberrypi.org/documentation/usage/gpio/>
