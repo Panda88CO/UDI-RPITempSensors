@@ -410,11 +410,11 @@ class TEMPsensor(polyinterface.Node):
                 self.setDriver('GV1', round(self.tempDisplayMin,1), True, True, 4)
                 self.setDriver('GV2', round( self.tempDisplayMax ,1), True, True, 4)
 
-            self.setDriver('GV6', int(self.currentTime.strftime("%m")))
-            self.setDriver('GV7', int(self.currentTime.strftime("%d")))
-            self.setDriver('GV8', int(self.currentTime.strftime("%Y")))
-            self.setDriver('GV9', int(self.currentTime.strftime("%H")))
-            self.setDriver('GV10',int(self.currentTime.strftime("%M")))
+            self.setDriver('GV6', int(self.currentTime.strftime("%m")), True, True, 47 )
+            self.setDriver('GV7', int(self.currentTime.strftime("%d")), True, True, 9)
+            self.setDriver('GV8', int(self.currentTime.strftime("%Y")), True, True, 77)
+            self.setDriver('GV9', int(self.currentTime.strftime("%H")), True, True, 20)
+            self.setDriver('GV10',int(self.currentTime.strftime("%M")), True, True, 44)
             #self.reportDrivers()
         except Exception as e:
             logging.error ('Error obtaining temperature :{}'.format(e))
